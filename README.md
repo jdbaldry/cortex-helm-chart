@@ -4,7 +4,7 @@ Helm chart for deploying [Grafana Metrics Enterprise](https://grafana.com/produc
 
 ## Dependencies
 
-### Key-Value store
+### Key-Value store
 
 Grafana Metrics Enterprise requires an externally provided key-value store, such as [etcd](https://etcd.io/) or [Consul](https://www.consul.io/).
 
