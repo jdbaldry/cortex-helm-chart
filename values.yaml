@@ -2,8 +2,8 @@
 ## Since the image is unique for all microservices, so are image settings.
 
 image:
-  repository: quay.io/cortexproject/cortex
-  tag: v1.1.0
+  repository: grafana/metrics-enterprise
+  tag: v1.0.2
   pullPolicy: IfNotPresent
 
 
