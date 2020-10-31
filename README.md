@@ -19,33 +19,33 @@ See [cortex documentation](https://cortexmetrics.io/docs/) for details on storag
 
 Grafana Metrics Enterprise can be installed in your Kubernetes cluster using the following command:
 
-```bash
-  helm install metrics-enterprise --name metrics-enterprise --namespace metrics-enterprise <path-to-cortex-helm-chart>
+```console
+$ helm install <cluster name> metrics-enterprise
 ```
 
 or if you have custom options or values you want to override:
 
-```bash
-  helm install metrics-enterprise --name metrics-enterprise --namespace metrics-enterprise -f my-metrics-enterprise-values.yaml <path-to-metrics-enterprise-helm-chart>
+```console
+$ helm install <cluster name> metrics-enterprise -f <values.yaml file>
 ```
 
 As part of this chart many different pods and services are installed which all
 have varying resource requirements. Please make sure that you have sufficient
-resources (CPU/memory) available in your cluster before installing Cortex Helm
+resources (CPU/memory) available in your cluster before installing Grafana Metrics Enterprise Helm
 chart.
 
-Additionally, the default chart installation expects Cortex pods to be deployed
-on nodes with taints "dedicated=cortex" and memcached pods on nodes with taints
-"dedicated=cortex-memcached". Additonally, Cortex pods have node affinity for
-nodes which match the expression "dedicated=cortex" and mamcached pods have
-affinity for "dedicated=cortex-memcached" nodes.
+Additionally, the default chart installation expects Grafana Metrics Enterprise pods to be deployed
+on nodes with taints "dedicated=metrics-enterprise" and memcached pods on nodes with taints
+"dedicated=metrics-enterprise-memcached". Additonally, Grafana Metrics Enterprise pods have node affinity for
+nodes which match the expression "dedicated=metrics-enterprise" and mamcached pods have
+affinity for "dedicated=metrics-enterprise-memcached" nodes.
 
 ## Upgrades
 
 To upgrade Grafana Metrics Enterprise use the following command:
 
-```bash
-  helm upgrade metrics-enterprise -f my-metrics-enterprise-values.yaml <path-to-metrics-enterprise-helm-chart>
+```console
+$ helm upgrade <cluster name>  metrics-enterprise -f <values.yaml file>
 ```
 
 ## Chart Requirements
@@ -147,63 +147,63 @@ To upgrade Grafana Metrics Enterprise use the following command:
 | compactor.strategy.type | string | `"RollingUpdate"` |  |
 | compactor.terminationGracePeriodSeconds | int | `240` |  |
 | compactor.tolerations | list | `[]` |  |
-| config.alertmanager.external_url | string | `"/api/prom/alertmanager"` |  |
-| config.auth_enabled | bool | `false` |  |
-| config.chunk_store.chunk_cache_config.memcached.expiration | string | `"1h"` |  |
-| config.chunk_store.chunk_cache_config.memcached_client.timeout | string | `"1s"` |  |
-| config.chunk_store.max_look_back_period | string | `"0s"` |  |
-| config.distributor.pool.health_check_ingesters | bool | `true` |  |
-| config.distributor.shard_by_all_labels | bool | `true` |  |
-| config.frontend.compress_responses | bool | `true` |  |
-| config.frontend.log_queries_longer_than | string | `"10s"` |  |
-| config.ingester.lifecycler.final_sleep | string | `"0s"` |  |
-| config.ingester.lifecycler.join_after | string | `"0s"` |  |
-| config.ingester.lifecycler.num_tokens | int | `512` |  |
-| config.ingester.lifecycler.ring.kvstore.consul.consistent_reads | bool | `true` |  |
+| config.alertmanager.external\_url | string | `"/api/prom/alertmanager"` |  |
+| config.auth\_enabled | bool | `false` |  |
+| config.chunk\_store.chunk\_cache\_config.memcached.expiration | string | `"1h"` |  |
+| config.chunk\_store.chunk\_cache\_config.memcached\_client.timeout | string | `"1s"` |  |
+| config.chunk\_store.max\_look\_back\_period | string | `"0s"` |  |
+| config.distributor.pool.health\_check\_ingesters | bool | `true` |  |
+| config.distributor.shard\_by\_all\_labels | bool | `true` |  |
+| config.frontend.compress\_responses | bool | `true` |  |
+| config.frontend.log\_queries\_longer\_than | string | `"10s"` |  |
+| config.ingester.lifecycler.final\_sleep | string | `"0s"` |  |
+| config.ingester.lifecycler.join\_after | string | `"0s"` |  |
+| config.ingester.lifecycler.num\_tokens | int | `512` |  |
+| config.ingester.lifecycler.ring.kvstore.consul.consistent\_reads | bool | `true` |  |
 | config.ingester.lifecycler.ring.kvstore.consul.host | string | `"consul:8500"` |  |
-| config.ingester.lifecycler.ring.kvstore.consul.http_client_timeout | string | `"20s"` |  |
+| config.ingester.lifecycler.ring.kvstore.consul.http\_client\_timeout | string | `"20s"` |  |
 | config.ingester.lifecycler.ring.kvstore.prefix | string | `"collectors/"` |  |
 | config.ingester.lifecycler.ring.kvstore.store | string | `"consul"` |  |
-| config.ingester.lifecycler.ring.replication_factor | int | `1` |  |
-| config.ingester.max_transfer_retries | int | `0` |  |
-| config.ingester_client.grpc_client_config.max_recv_msg_size | int | `104857600` |  |
-| config.ingester_client.grpc_client_config.max_send_msg_size | int | `104857600` |  |
-| config.ingester_client.grpc_client_config.use_gzip_compression | bool | `true` |  |
-| config.limits.enforce_metric_name | bool | `false` |  |
-| config.limits.reject_old_samples | bool | `true` |  |
-| config.limits.reject_old_samples_max_age | string | `"168h"` |  |
-| config.querier.active_query_tracker_dir | string | `"/data/cortex/querier"` |  |
-| config.querier.query_ingesters_within | string | `"12h"` |  |
-| config.query_range.align_queries_with_step | bool | `true` |  |
-| config.query_range.cache_results | bool | `true` |  |
-| config.query_range.results_cache.cache.memcached.expiration | string | `"1h"` |  |
-| config.query_range.results_cache.cache.memcached_client.timeout | string | `"1s"` |  |
-| config.query_range.split_queries_by_interval | string | `"24h"` |  |
-| config.ruler.enable_alertmanager_discovery | bool | `false` |  |
+| config.ingester.lifecycler.ring.replication\_factor | int | `1` |  |
+| config.ingester.max\_transfer\_retries | int | `0` |  |
+| config.ingester\_client.grpc\_client\_config.max\_recv\_msg\_size | int | `104857600` |  |
+| config.ingester\_client.grpc\_client\_config.max\_send\_msg\_size | int | `104857600` |  |
+| config.ingester\_client.grpc\_client\_config.use\_gzip\_compression | bool | `true` |  |
+| config.limits.enforce\_metric\_name | bool | `false` |  |
+| config.limits.reject\_old\_samples | bool | `true` |  |
+| config.limits.reject\_old\_samples\_max\_age | string | `"168h"` |  |
+| config.querier.active\_query\_tracker\_dir | string | `"/data/metrics-enterprise/querier"` |  |
+| config.querier.query\_ingesters\_within | string | `"12h"` |  |
+| config.query\_range.align\_queries\_with\_step | bool | `true` |  |
+| config.query\_range.cache\_results | bool | `true` |  |
+| config.query\_range.results\_cache.cache.memcached.expiration | string | `"1h"` |  |
+| config.query\_range.results\_cache.cache.memcached\_client.timeout | string | `"1s"` |  |
+| config.query\_range.split\_queries\_by\_interval | string | `"24h"` |  |
+| config.ruler.enable\_alertmanager\_discovery | bool | `false` |  |
 | config.schema.configs[0].from | string | `"2019-07-29"` |  |
 | config.schema.configs[0].index.period | string | `"168h"` |  |
-| config.schema.configs[0].index.prefix | string | `"index_"` |  |
-| config.schema.configs[0].object_store | string | `"cassandra"` |  |
+| config.schema.configs[0].index.prefix | string | `"index\_"` |  |
+| config.schema.configs[0].object\_store | string | `"cassandra"` |  |
 | config.schema.configs[0].schema | string | `"v10"` |  |
 | config.schema.configs[0].store | string | `"cassandra"` |  |
-| config.server.grpc_listen_port | int | `9095` |  |
-| config.server.grpc_server_max_concurrent_streams | int | `1000` |  |
-| config.server.grpc_server_max_recv_msg_size | int | `104857600` |  |
-| config.server.grpc_server_max_send_msg_size | int | `104857600` |  |
-| config.server.http_listen_port | int | `8080` |  |
-| config.storage.azure.account_key | string | `nil` |  |
-| config.storage.azure.account_name | string | `nil` |  |
-| config.storage.azure.container_name | string | `nil` |  |
+| config.server.grpc\_listen\_port | int | `9095` |  |
+| config.server.grpc\_server\_max\_concurrent\_streams | int | `1000` |  |
+| config.server.grpc\_server\_max\_recv\_msg\_size | int | `104857600` |  |
+| config.server.grpc\_server\_max\_send\_msg\_size | int | `104857600` |  |
+| config.server.http\_listen\_port | int | `8080` |  |
+| config.storage.azure.account\_key | string | `nil` |  |
+| config.storage.azure.account\_name | string | `nil` |  |
+| config.storage.azure.container\_name | string | `nil` |  |
 | config.storage.cassandra.addresses | string | `nil` |  |
 | config.storage.cassandra.auth | bool | `true` |  |
-| config.storage.cassandra.keyspace | string | `"cortex"` |  |
+| config.storage.cassandra.keyspace | string | `"metrics-enterprise"` |  |
 | config.storage.cassandra.password | string | `nil` |  |
 | config.storage.cassandra.username | string | `nil` |  |
 | config.storage.engine | string | `"chunks"` |  |
-| config.storage.index_queries_cache_config.memcached.expiration | string | `"1h"` |  |
-| config.storage.index_queries_cache_config.memcached_client.timeout | string | `"1s"` |  |
-| config.table_manager.retention_deletes_enabled | bool | `false` |  |
-| config.table_manager.retention_period | string | `"0s"` |  |
+| config.storage.index\_queries\_cache\_config.memcached.expiration | string | `"1h"` |  |
+| config.storage.index\_queries\_cache\_config.memcached\_client.timeout | string | `"1s"` |  |
+| config.table\_manager.retention\_deletes\_enabled | bool | `false` |  |
+| config.table\_manager.retention\_period | string | `"0s"` |  |
 | configs.affinity | object | `{}` |  |
 | configs.annotations | object | `{}` |  |
 | configs.env | list | `[]` |  |
@@ -238,11 +238,11 @@ To upgrade Grafana Metrics Enterprise use the following command:
 | configs.strategy.type | string | `"RollingUpdate"` |  |
 | configs.terminationGracePeriodSeconds | int | `180` |  |
 | configs.tolerations | list | `[]` |  |
-| configsdb_postgresql.auth.existing_secret.key | string | `nil` |  |
-| configsdb_postgresql.auth.existing_secret.name | string | `nil` |  |
-| configsdb_postgresql.auth.password | string | `nil` |  |
-| configsdb_postgresql.enabled | bool | `false` |  |
-| configsdb_postgresql.uri | string | `nil` |  |
+| configsdb\_postgresql.auth.existing\_secret.key | string | `nil` |  |
+| configsdb\_postgresql.auth.existing\_secret.name | string | `nil` |  |
+| configsdb\_postgresql.auth.password | string | `nil` |  |
+| configsdb\_postgresql.enabled | bool | `false` |  |
+| configsdb\_postgresql.uri | string | `nil` |  |
 | distributor.affinity.podAntiAffinity.preferredDuringSchedulingIgnoredDuringExecution[0].podAffinityTerm.labelSelector.matchExpressions[0].key | string | `"target"` |  |
 | distributor.affinity.podAntiAffinity.preferredDuringSchedulingIgnoredDuringExecution[0].podAffinityTerm.labelSelector.matchExpressions[0].operator | string | `"In"` |  |
 | distributor.affinity.podAntiAffinity.preferredDuringSchedulingIgnoredDuringExecution[0].podAffinityTerm.labelSelector.matchExpressions[0].values[0] | string | `"distributor"` |  |
@@ -284,7 +284,7 @@ To upgrade Grafana Metrics Enterprise use the following command:
 | externalConfigSecretName | string | `"secret-with-config.yaml"` |  |
 | externalConfigVersion | string | `"0"` |  |
 | image.pullPolicy | string | `"IfNotPresent"` |  |
-| image.repository | string | `"quay.io/cortexproject/cortex"` |  |
+| image.repository | string | `"grafana/metrics-enterprise"` |  |
 | image.tag | string | `"v1.1.0"` |  |
 | ingester.affinity.podAntiAffinity.preferredDuringSchedulingIgnoredDuringExecution[0].podAffinityTerm.labelSelector.matchExpressions[0].key | string | `"target"` |  |
 | ingester.affinity.podAntiAffinity.preferredDuringSchedulingIgnoredDuringExecution[0].podAffinityTerm.labelSelector.matchExpressions[0].operator | string | `"In"` |  |
@@ -382,7 +382,7 @@ To upgrade Grafana Metrics Enterprise use the following command:
 | nginx.extraPorts | list | `[]` |  |
 | nginx.extraVolumeMounts | list | `[]` |  |
 | nginx.extraVolumes | list | `[]` |  |
-| nginx.http_listen_port | int | `80` |  |
+| nginx.http\_listen\_port | int | `80` |  |
 | nginx.image.pullPolicy | string | `"IfNotPresent"` |  |
 | nginx.image.repository | string | `"nginx"` |  |
 | nginx.image.tag | float | `1.17` |  |
@@ -450,44 +450,44 @@ To upgrade Grafana Metrics Enterprise use the following command:
 | querier.strategy.type | string | `"RollingUpdate"` |  |
 | querier.terminationGracePeriodSeconds | int | `180` |  |
 | querier.tolerations | list | `[]` |  |
-| query_frontend.affinity.podAntiAffinity.preferredDuringSchedulingIgnoredDuringExecution[0].podAffinityTerm.labelSelector.matchExpressions[0].key | string | `"target"` |  |
-| query_frontend.affinity.podAntiAffinity.preferredDuringSchedulingIgnoredDuringExecution[0].podAffinityTerm.labelSelector.matchExpressions[0].operator | string | `"In"` |  |
-| query_frontend.affinity.podAntiAffinity.preferredDuringSchedulingIgnoredDuringExecution[0].podAffinityTerm.labelSelector.matchExpressions[0].values[0] | string | `"query-frontend"` |  |
-| query_frontend.affinity.podAntiAffinity.preferredDuringSchedulingIgnoredDuringExecution[0].podAffinityTerm.topologyKey | string | `"kubernetes.io/hostname"` |  |
-| query_frontend.affinity.podAntiAffinity.preferredDuringSchedulingIgnoredDuringExecution[0].weight | int | `100` |  |
-| query_frontend.annotations | object | `{}` |  |
-| query_frontend.env | list | `[]` |  |
-| query_frontend.extraArgs | object | `{}` |  |
-| query_frontend.extraContainers | list | `[]` |  |
-| query_frontend.extraPorts | list | `[]` |  |
-| query_frontend.extraVolumeMounts | list | `[]` |  |
-| query_frontend.extraVolumes | list | `[]` |  |
-| query_frontend.initContainers | list | `[]` |  |
-| query_frontend.livenessProbe.httpGet.path | string | `"/ready"` |  |
-| query_frontend.livenessProbe.httpGet.port | string | `"http-metrics"` |  |
-| query_frontend.livenessProbe.initialDelaySeconds | int | `45` |  |
-| query_frontend.nodeSelector | object | `{}` |  |
-| query_frontend.persistence.subPath | string | `nil` |  |
-| query_frontend.podAnnotations."prometheus.io/port" | string | `"http-metrics"` |  |
-| query_frontend.podAnnotations."prometheus.io/scrape" | string | `"true"` |  |
-| query_frontend.podDisruptionBudget | object | `{}` |  |
-| query_frontend.podLabels | object | `{}` |  |
-| query_frontend.readinessProbe.httpGet.path | string | `"/ready"` |  |
-| query_frontend.readinessProbe.httpGet.port | string | `"http-metrics"` |  |
-| query_frontend.readinessProbe.initialDelaySeconds | int | `45` |  |
-| query_frontend.replicas | int | `2` |  |
-| query_frontend.resources.limits.cpu | int | `1` |  |
-| query_frontend.resources.limits.memory | string | `"256Mi"` |  |
-| query_frontend.resources.requests.cpu | string | `"10m"` |  |
-| query_frontend.resources.requests.memory | string | `"32Mi"` |  |
-| query_frontend.securityContext | object | `{}` |  |
-| query_frontend.service.annotations | object | `{}` |  |
-| query_frontend.service.labels | object | `{}` |  |
-| query_frontend.strategy.rollingUpdate.maxSurge | int | `0` |  |
-| query_frontend.strategy.rollingUpdate.maxUnavailable | int | `1` |  |
-| query_frontend.strategy.type | string | `"RollingUpdate"` |  |
-| query_frontend.terminationGracePeriodSeconds | int | `180` |  |
-| query_frontend.tolerations | list | `[]` |  |
+| query\_frontend.affinity.podAntiAffinity.preferredDuringSchedulingIgnoredDuringExecution[0].podAffinityTerm.labelSelector.matchExpressions[0].key | string | `"target"` |  |
+| query\_frontend.affinity.podAntiAffinity.preferredDuringSchedulingIgnoredDuringExecution[0].podAffinityTerm.labelSelector.matchExpressions[0].operator | string | `"In"` |  |
+| query\_frontend.affinity.podAntiAffinity.preferredDuringSchedulingIgnoredDuringExecution[0].podAffinityTerm.labelSelector.matchExpressions[0].values[0] | string | `"query-frontend"` |  |
+| query\_frontend.affinity.podAntiAffinity.preferredDuringSchedulingIgnoredDuringExecution[0].podAffinityTerm.topologyKey | string | `"kubernetes.io/hostname"` |  |
+| query\_frontend.affinity.podAntiAffinity.preferredDuringSchedulingIgnoredDuringExecution[0].weight | int | `100` |  |
+| query\_frontend.annotations | object | `{}` |  |
+| query\_frontend.env | list | `[]` |  |
+| query\_frontend.extraArgs | object | `{}` |  |
+| query\_frontend.extraContainers | list | `[]` |  |
+| query\_frontend.extraPorts | list | `[]` |  |
+| query\_frontend.extraVolumeMounts | list | `[]` |  |
+| query\_frontend.extraVolumes | list | `[]` |  |
+| query\_frontend.initContainers | list | `[]` |  |
+| query\_frontend.livenessProbe.httpGet.path | string | `"/ready"` |  |
+| query\_frontend.livenessProbe.httpGet.port | string | `"http-metrics"` |  |
+| query\_frontend.livenessProbe.initialDelaySeconds | int | `45` |  |
+| query\_frontend.nodeSelector | object | `{}` |  |
+| query\_frontend.persistence.subPath | string | `nil` |  |
+| query\_frontend.podAnnotations."prometheus.io/port" | string | `"http-metrics"` |  |
+| query\_frontend.podAnnotations."prometheus.io/scrape" | string | `"true"` |  |
+| query\_frontend.podDisruptionBudget | object | `{}` |  |
+| query\_frontend.podLabels | object | `{}` |  |
+| query\_frontend.readinessProbe.httpGet.path | string | `"/ready"` |  |
+| query\_frontend.readinessProbe.httpGet.port | string | `"http-metrics"` |  |
+| query\_frontend.readinessProbe.initialDelaySeconds | int | `45` |  |
+| query\_frontend.replicas | int | `2` |  |
+| query\_frontend.resources.limits.cpu | int | `1` |  |
+| query\_frontend.resources.limits.memory | string | `"256Mi"` |  |
+| query\_frontend.resources.requests.cpu | string | `"10m"` |  |
+| query\_frontend.resources.requests.memory | string | `"32Mi"` |  |
+| query\_frontend.securityContext | object | `{}` |  |
+| query\_frontend.service.annotations | object | `{}` |  |
+| query\_frontend.service.labels | object | `{}` |  |
+| query\_frontend.strategy.rollingUpdate.maxSurge | int | `0` |  |
+| query\_frontend.strategy.rollingUpdate.maxUnavailable | int | `1` |  |
+| query\_frontend.strategy.type | string | `"RollingUpdate"` |  |
+| query\_frontend.terminationGracePeriodSeconds | int | `180` |  |
+| query\_frontend.tolerations | list | `[]` |  |
 | rbac.create | bool | `true` |  |
 | rbac.pspEnabled | bool | `true` |  |
 | ruler.affinity | object | `{}` |  |
@@ -527,83 +527,83 @@ To upgrade Grafana Metrics Enterprise use the following command:
 | serviceAccount.annotations | object | `{}` |  |
 | serviceAccount.create | bool | `true` |  |
 | serviceAccount.name | string | `nil` |  |
-| store_gateway.affinity.podAntiAffinity.preferredDuringSchedulingIgnoredDuringExecution[0].podAffinityTerm.labelSelector.matchExpressions[0].key | string | `"target"` |  |
-| store_gateway.affinity.podAntiAffinity.preferredDuringSchedulingIgnoredDuringExecution[0].podAffinityTerm.labelSelector.matchExpressions[0].operator | string | `"In"` |  |
-| store_gateway.affinity.podAntiAffinity.preferredDuringSchedulingIgnoredDuringExecution[0].podAffinityTerm.labelSelector.matchExpressions[0].values[0] | string | `"store-gateway"` |  |
-| store_gateway.affinity.podAntiAffinity.preferredDuringSchedulingIgnoredDuringExecution[0].podAffinityTerm.topologyKey | string | `"kubernetes.io/hostname"` |  |
-| store_gateway.affinity.podAntiAffinity.preferredDuringSchedulingIgnoredDuringExecution[0].weight | int | `100` |  |
-| store_gateway.annotations | object | `{}` |  |
-| store_gateway.env | list | `[]` |  |
-| store_gateway.extraArgs | object | `{}` |  |
-| store_gateway.extraContainers | list | `[]` |  |
-| store_gateway.extraPorts | list | `[]` |  |
-| store_gateway.extraVolumeMounts | list | `[]` |  |
-| store_gateway.extraVolumes | list | `[]` |  |
-| store_gateway.initContainers | list | `[]` |  |
-| store_gateway.livenessProbe.failureThreshold | int | `20` |  |
-| store_gateway.livenessProbe.httpGet.path | string | `"/ready"` |  |
-| store_gateway.livenessProbe.httpGet.port | string | `"http-metrics"` |  |
-| store_gateway.livenessProbe.httpGet.scheme | string | `"HTTP"` |  |
-| store_gateway.livenessProbe.initialDelaySeconds | int | `180` |  |
-| store_gateway.livenessProbe.periodSeconds | int | `30` |  |
-| store_gateway.livenessProbe.successThreshold | int | `1` |  |
-| store_gateway.livenessProbe.timeoutSeconds | int | `1` |  |
-| store_gateway.nodeSelector | object | `{}` |  |
-| store_gateway.persistentVolume.accessModes[0] | string | `"ReadWriteOnce"` |  |
-| store_gateway.persistentVolume.annotations | object | `{}` |  |
-| store_gateway.persistentVolume.enabled | bool | `true` |  |
-| store_gateway.persistentVolume.size | string | `"2Gi"` |  |
-| store_gateway.persistentVolume.subPath | string | `""` |  |
-| store_gateway.podAnnotations."prometheus.io/port" | string | `"http-metrics"` |  |
-| store_gateway.podAnnotations."prometheus.io/scrape" | string | `"true"` |  |
-| store_gateway.podDisruptionBudget | object | `{}` |  |
-| store_gateway.podLabels | object | `{}` |  |
-| store_gateway.readinessProbe.httpGet.path | string | `"/ready"` |  |
-| store_gateway.readinessProbe.httpGet.port | string | `"http-metrics"` |  |
-| store_gateway.readinessProbe.initialDelaySeconds | int | `60` |  |
-| store_gateway.replicas | int | `1` |  |
-| store_gateway.resources.limits.cpu | int | `1` |  |
-| store_gateway.resources.limits.memory | string | `"1Gi"` |  |
-| store_gateway.resources.requests.cpu | string | `"100m"` |  |
-| store_gateway.resources.requests.memory | string | `"512Mi"` |  |
-| store_gateway.securityContext | object | `{}` |  |
-| store_gateway.service.annotations | object | `{}` |  |
-| store_gateway.service.labels | object | `{}` |  |
-| store_gateway.strategy.type | string | `"RollingUpdate"` |  |
-| store_gateway.terminationGracePeriodSeconds | int | `240` |  |
-| store_gateway.tolerations | list | `[]` |  |
-| table_manager.affinity | object | `{}` |  |
-| table_manager.annotations | object | `{}` |  |
-| table_manager.env | list | `[]` |  |
-| table_manager.extraArgs | object | `{}` |  |
-| table_manager.extraContainers | list | `[]` |  |
-| table_manager.extraPorts | list | `[]` |  |
-| table_manager.extraVolumeMounts | list | `[]` |  |
-| table_manager.extraVolumes | list | `[]` |  |
-| table_manager.initContainers | list | `[]` |  |
-| table_manager.livenessProbe.httpGet.path | string | `"/ready"` |  |
-| table_manager.livenessProbe.httpGet.port | string | `"http-metrics"` |  |
-| table_manager.livenessProbe.initialDelaySeconds | int | `45` |  |
-| table_manager.nodeSelector | object | `{}` |  |
-| table_manager.persistence.subPath | string | `nil` |  |
-| table_manager.podAnnotations."prometheus.io/port" | string | `"http-metrics"` |  |
-| table_manager.podAnnotations."prometheus.io/scrape" | string | `"true"` |  |
-| table_manager.podDisruptionBudget | object | `{}` |  |
-| table_manager.podLabels | object | `{}` |  |
-| table_manager.readinessProbe.httpGet.path | string | `"/ready"` |  |
-| table_manager.readinessProbe.httpGet.port | string | `"http-metrics"` |  |
-| table_manager.readinessProbe.initialDelaySeconds | int | `45` |  |
-| table_manager.replicas | int | `1` |  |
-| table_manager.resources.limits.cpu | int | `1` |  |
-| table_manager.resources.limits.memory | string | `"1Gi"` |  |
-| table_manager.resources.requests.cpu | string | `"10m"` |  |
-| table_manager.resources.requests.memory | string | `"32Mi"` |  |
-| table_manager.securityContext | object | `{}` |  |
-| table_manager.service.annotations | object | `{}` |  |
-| table_manager.service.labels | object | `{}` |  |
-| table_manager.strategy.rollingUpdate.maxSurge | int | `0` |  |
-| table_manager.strategy.rollingUpdate.maxUnavailable | int | `1` |  |
-| table_manager.strategy.type | string | `"RollingUpdate"` |  |
-| table_manager.terminationGracePeriodSeconds | int | `180` |  |
-| table_manager.tolerations | list | `[]` |  |
+| store\_gateway.affinity.podAntiAffinity.preferredDuringSchedulingIgnoredDuringExecution[0].podAffinityTerm.labelSelector.matchExpressions[0].key | string | `"target"` |  |
+| store\_gateway.affinity.podAntiAffinity.preferredDuringSchedulingIgnoredDuringExecution[0].podAffinityTerm.labelSelector.matchExpressions[0].operator | string | `"In"` |  |
+| store\_gateway.affinity.podAntiAffinity.preferredDuringSchedulingIgnoredDuringExecution[0].podAffinityTerm.labelSelector.matchExpressions[0].values[0] | string | `"store-gateway"` |  |
+| store\_gateway.affinity.podAntiAffinity.preferredDuringSchedulingIgnoredDuringExecution[0].podAffinityTerm.topologyKey | string | `"kubernetes.io/hostname"` |  |
+| store\_gateway.affinity.podAntiAffinity.preferredDuringSchedulingIgnoredDuringExecution[0].weight | int | `100` |  |
+| store\_gateway.annotations | object | `{}` |  |
+| store\_gateway.env | list | `[]` |  |
+| store\_gateway.extraArgs | object | `{}` |  |
+| store\_gateway.extraContainers | list | `[]` |  |
+| store\_gateway.extraPorts | list | `[]` |  |
+| store\_gateway.extraVolumeMounts | list | `[]` |  |
+| store\_gateway.extraVolumes | list | `[]` |  |
+| store\_gateway.initContainers | list | `[]` |  |
+| store\_gateway.livenessProbe.failureThreshold | int | `20` |  |
+| store\_gateway.livenessProbe.httpGet.path | string | `"/ready"` |  |
+| store\_gateway.livenessProbe.httpGet.port | string | `"http-metrics"` |  |
+| store\_gateway.livenessProbe.httpGet.scheme | string | `"HTTP"` |  |
+| store\_gateway.livenessProbe.initialDelaySeconds | int | `180` |  |
+| store\_gateway.livenessProbe.periodSeconds | int | `30` |  |
+| store\_gateway.livenessProbe.successThreshold | int | `1` |  |
+| store\_gateway.livenessProbe.timeoutSeconds | int | `1` |  |
+| store\_gateway.nodeSelector | object | `{}` |  |
+| store\_gateway.persistentVolume.accessModes[0] | string | `"ReadWriteOnce"` |  |
+| store\_gateway.persistentVolume.annotations | object | `{}` |  |
+| store\_gateway.persistentVolume.enabled | bool | `true` |  |
+| store\_gateway.persistentVolume.size | string | `"2Gi"` |  |
+| store\_gateway.persistentVolume.subPath | string | `""` |  |
+| store\_gateway.podAnnotations."prometheus.io/port" | string | `"http-metrics"` |  |
+| store\_gateway.podAnnotations."prometheus.io/scrape" | string | `"true"` |  |
+| store\_gateway.podDisruptionBudget | object | `{}` |  |
+| store\_gateway.podLabels | object | `{}` |  |
+| store\_gateway.readinessProbe.httpGet.path | string | `"/ready"` |  |
+| store\_gateway.readinessProbe.httpGet.port | string | `"http-metrics"` |  |
+| store\_gateway.readinessProbe.initialDelaySeconds | int | `60` |  |
+| store\_gateway.replicas | int | `1` |  |
+| store\_gateway.resources.limits.cpu | int | `1` |  |
+| store\_gateway.resources.limits.memory | string | `"1Gi"` |  |
+| store\_gateway.resources.requests.cpu | string | `"100m"` |  |
+| store\_gateway.resources.requests.memory | string | `"512Mi"` |  |
+| store\_gateway.securityContext | object | `{}` |  |
+| store\_gateway.service.annotations | object | `{}` |  |
+| store\_gateway.service.labels | object | `{}` |  |
+| store\_gateway.strategy.type | string | `"RollingUpdate"` |  |
+| store\_gateway.terminationGracePeriodSeconds | int | `240` |  |
+| store\_gateway.tolerations | list | `[]` |  |
+| table\_manager.affinity | object | `{}` |  |
+| table\_manager.annotations | object | `{}` |  |
+| table\_manager.env | list | `[]` |  |
+| table\_manager.extraArgs | object | `{}` |  |
+| table\_manager.extraContainers | list | `[]` |  |
+| table\_manager.extraPorts | list | `[]` |  |
+| table\_manager.extraVolumeMounts | list | `[]` |  |
+| table\_manager.extraVolumes | list | `[]` |  |
+| table\_manager.initContainers | list | `[]` |  |
+| table\_manager.livenessProbe.httpGet.path | string | `"/ready"` |  |
+| table\_manager.livenessProbe.httpGet.port | string | `"http-metrics"` |  |
+| table\_manager.livenessProbe.initialDelaySeconds | int | `45` |  |
+| table\_manager.nodeSelector | object | `{}` |  |
+| table\_manager.persistence.subPath | string | `nil` |  |
+| table\_manager.podAnnotations."prometheus.io/port" | string | `"http-metrics"` |  |
+| table\_manager.podAnnotations."prometheus.io/scrape" | string | `"true"` |  |
+| table\_manager.podDisruptionBudget | object | `{}` |  |
+| table\_manager.podLabels | object | `{}` |  |
+| table\_manager.readinessProbe.httpGet.path | string | `"/ready"` |  |
+| table\_manager.readinessProbe.httpGet.port | string | `"http-metrics"` |  |
+| table\_manager.readinessProbe.initialDelaySeconds | int | `45` |  |
+| table\_manager.replicas | int | `1` |  |
+| table\_manager.resources.limits.cpu | int | `1` |  |
+| table\_manager.resources.limits.memory | string | `"1Gi"` |  |
+| table\_manager.resources.requests.cpu | string | `"10m"` |  |
+| table\_manager.resources.requests.memory | string | `"32Mi"` |  |
+| table\_manager.securityContext | object | `{}` |  |
+| table\_manager.service.annotations | object | `{}` |  |
+| table\_manager.service.labels | object | `{}` |  |
+| table\_manager.strategy.rollingUpdate.maxSurge | int | `0` |  |
+| table\_manager.strategy.rollingUpdate.maxUnavailable | int | `1` |  |
+| table\_manager.strategy.type | string | `"RollingUpdate"` |  |
+| table\_manager.terminationGracePeriodSeconds | int | `180` |  |
+| table\_manager.tolerations | list | `[]` |  |
 | useExternalConfig | bool | `false` |  |
