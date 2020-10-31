@@ -2,11 +2,11 @@
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: {{ template "cortex.fullname" . }}-store-gateway
+  name: {{ template "metrics_enterprise.fullname" . }}-store-gateway
   namespace: {{ .Release.Namespace }}
   labels:
-    app: {{ template "cortex.name" . }}-store-gateway
-    chart: {{ template "cortex.chart" . }}
+    app: {{ template "metrics_enterprise.name" . }}-store-gateway
+    chart: {{ template "metrics_enterprise.chart" . }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
   annotations:
@@ -15,11 +15,11 @@ spec:
   replicas: {{ .Values.store_gateway.replicas }}
   selector:
     matchLabels:
-      app: {{ template "cortex.name" . }}-store-gateway
+      app: {{ template "metrics_enterprise.name" . }}-store-gateway
       release: {{ .Release.Name }}
   updateStrategy:
     {{- toYaml .Values.store_gateway.strategy | nindent 4 }}      
-  serviceName: {{ template "cortex.fullname" . }}-store-gateway
+  serviceName: {{ template "metrics_enterprise.fullname" . }}-store-gateway
   {{- if .Values.store_gateway.persistentVolume.enabled }}
   volumeClaimTemplates:
     - metadata:
@@ -45,8 +45,8 @@ spec:
   template:
     metadata:
       labels:
-        app: {{ template "cortex.name" . }}-store-gateway
-        name: {{ template "cortex.name" . }}-store-gateway
+        app: {{ template "metrics_enterprise.name" . }}-store-gateway
+        name: {{ template "metrics_enterprise.name" . }}-store-gateway
         target: store-gateway
         release: {{ .Release.Name }}
         {{- with .Values.store_gateway.podLabels }}
@@ -62,7 +62,7 @@ spec:
         {{- toYaml . | nindent 8 }}
         {{- end }}
     spec:
-      serviceAccountName: {{ template "cortex.serviceAccountName" . }}
+      serviceAccountName: {{ template "metrics_enterprise.serviceAccountName" . }}
       {{- if .Values.store_gateway.priorityClassName }}
       priorityClassName: {{ .Values.store_gateway.priorityClassName }}
       {{- end }}
@@ -89,7 +89,7 @@ spec:
             {{- if .Values.useExternalConfig }}
             secretName: {{ .Values.externalConfigSecretName }}
             {{- else }}
-            secretName: {{ template "cortex.fullname" . }}
+            secretName: {{ template "metrics_enterprise.fullname" . }}
             {{- end }}
         {{- if not .Values.store_gateway.persistentVolume.enabled }}
         - name: storage
@@ -107,12 +107,12 @@ spec:
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           args:
             - "-target=store-gateway"
-            - "-config.file=/etc/cortex/cortex.yaml"
+            - "-config.file=/etc/metrics-enterprise/cortex.yaml"
             {{- if .Values.memcached.enabled }}
-            - -store.chunks-cache.memcached.addresses=dns+{{ template "cortex.fullname" . }}-memcached.{{ .Release.Namespace }}.svc.cluster.local:11211
+            - -store.chunks-cache.memcached.addresses=dns+{{ template "metrics_enterprise.fullname" . }}-memcached.{{ .Release.Namespace }}.svc.cluster.local:11211
             {{- end }}
             {{- if index .Values "memcached-index-write" "enabled" }}
-            - -store.index-cache-write.memcached.addresses=dns+{{ template "cortex.fullname" . }}-memcached-index-write.{{ .Release.Namespace }}.svc.cluster.local:11211
+            - -store.index-cache-write.memcached.addresses=dns+{{ template "metrics_enterprise.fullname" . }}-memcached-index-write.{{ .Release.Namespace }}.svc.cluster.local:11211
             {{- end }}
             {{- range $key, $value := .Values.store_gateway.extraArgs }}
             - "-{{ $key }}={{ $value }}"
@@ -122,7 +122,7 @@ spec:
             {{ toYaml .Values.store_gateway.extraVolumeMounts | nindent 12}}
             {{- end }}
             - name: config
-              mountPath: /etc/cortex
+              mountPath: /etc/metrics-enterprise
             - name: storage
               mountPath: "/data"
               {{- if .Values.store_gateway.persistentVolume.subPath }}

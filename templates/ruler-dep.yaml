@@ -1,11 +1,11 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ template "cortex.fullname" . }}-ruler
+  name: {{ template "metrics_enterprise.fullname" . }}-ruler
   namespace: {{ .Release.Namespace }}
   labels:
-    app: {{ template "cortex.name" . }}-ruler
-    chart: {{ template "cortex.chart" . }}
+    app: {{ template "metrics_enterprise.name" . }}-ruler
+    chart: {{ template "metrics_enterprise.chart" . }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
   annotations:
@@ -14,15 +14,15 @@ spec:
   replicas: {{ .Values.ruler.replicas }}
   selector:
     matchLabels:
-      app: {{ template "cortex.name" . }}-ruler
+      app: {{ template "metrics_enterprise.name" . }}-ruler
       release: {{ .Release.Name }}
   strategy:
     {{- toYaml .Values.ruler.strategy | nindent 4 }}
   template:
     metadata:
       labels:
-        app: {{ template "cortex.name" . }}-ruler
-        name: {{ template "cortex.name" . }}-ruler
+        app: {{ template "metrics_enterprise.name" . }}-ruler
+        name: {{ template "metrics_enterprise.name" . }}-ruler
         target: ruler
         release: {{ .Release.Name }}
         {{- with .Values.ruler.podLabels }}
@@ -38,7 +38,7 @@ spec:
         {{- toYaml . | nindent 8 }}
         {{- end }}
     spec:
-      serviceAccountName: {{ template "cortex.serviceAccountName" . }}
+      serviceAccountName: {{ template "metrics_enterprise.serviceAccountName" . }}
     {{- if .Values.ruler.priorityClassName }}
       priorityClassName: {{ .Values.ruler.priorityClassName }}
     {{- end }}
@@ -58,16 +58,16 @@ spec:
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           args:
             - "-target=ruler"
-            - "-config.file=/etc/cortex/cortex.yaml"
-            - "-ruler.configs.url=http://{{ template "cortex.fullname" . }}-configs.{{ .Release.Namespace }}.svc.cluster.local:{{ .Values.config.server.http_listen_port }}"
+            - "-config.file=/etc/metrics-enterprise/cortex.yaml"
+            - "-ruler.configs.url=http://{{ template "metrics_enterprise.fullname" . }}-configs.{{ .Release.Namespace }}.svc.cluster.local:{{ .Values.config.server.http_listen_port }}"
             {{- if .Values.config.ruler.enable_alertmanager_discovery }}
             - "-ruler.alertmanager-discovery=true"
-            - "-ruler.alertmanager-url=http://_http-metrics._tcp.{{ template "cortex.name" . }}-alertmanager-headless/api/prom/alertmanager/"
+            - "-ruler.alertmanager-url=http://_http-metrics._tcp.{{ template "metrics_enterprise.name" . }}-alertmanager-headless/api/prom/alertmanager/"
             {{- else }}
-            - "-ruler.alertmanager-url=http://{{ template "cortex.fullname" . }}-alertmanager.{{ .Release.Namespace }}.svc.cluster.local:{{ .Values.config.server.http_listen_port }}/api/prom/alertmanager/"
+            - "-ruler.alertmanager-url=http://{{ template "metrics_enterprise.fullname" . }}-alertmanager.{{ .Release.Namespace }}.svc.cluster.local:{{ .Values.config.server.http_listen_port }}/api/prom/alertmanager/"
             {{- end }}
             {{- if .Values.memcached.enabled }}
-            - -store.chunks-cache.memcached.addresses=dns+{{ template "cortex.fullname" . }}-memcached.{{ .Release.Namespace }}.svc.cluster.local:11211
+            - -store.chunks-cache.memcached.addresses=dns+{{ template "metrics_enterprise.fullname" . }}-memcached.{{ .Release.Namespace }}.svc.cluster.local:11211
             - -store.chunks-cache.memcached.timeout=100ms
             {{- end }}
           {{- range $key, $value := .Values.ruler.extraArgs }}
@@ -78,7 +78,7 @@ spec:
               {{ toYaml .Values.ruler.extraVolumeMounts | nindent 12}}
             {{- end }}
             - name: config
-              mountPath: /etc/cortex
+              mountPath: /etc/metrics-enterprise
             - name: storage
               mountPath: "/data"
               subPath: {{ .Values.ruler.persistence.subPath }}
@@ -114,7 +114,7 @@ spec:
 {{- if .Values.useExternalConfig }}
             secretName: {{ .Values.externalConfigSecretName }}
 {{- else }}
-            secretName: {{ template "cortex.fullname" . }}
+            secretName: {{ template "metrics_enterprise.fullname" . }}
 {{- end }}
 {{- if .Values.ruler.extraVolumes }}
 {{ toYaml .Values.ruler.extraVolumes | indent 8}}

@@ -1,11 +1,11 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ template "cortex.fullname" . }}-querier
+  name: {{ template "metrics_enterprise.fullname" . }}-querier
   namespace: {{ .Release.Namespace }}
   labels:
-    app: {{ template "cortex.name" . }}-querier
-    chart: {{ template "cortex.chart" . }}
+    app: {{ template "metrics_enterprise.name" . }}-querier
+    chart: {{ template "metrics_enterprise.chart" . }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
   annotations:
@@ -14,15 +14,15 @@ spec:
   replicas: {{ .Values.querier.replicas }}
   selector:
     matchLabels:
-      app: {{ template "cortex.name" . }}-querier
+      app: {{ template "metrics_enterprise.name" . }}-querier
       release: {{ .Release.Name }}
   strategy:
     {{- toYaml .Values.querier.strategy | nindent 4 }}
   template:
     metadata:
       labels:
-        app: {{ template "cortex.name" . }}-querier
-        name: {{ template "cortex.name" . }}-querier
+        app: {{ template "metrics_enterprise.name" . }}-querier
+        name: {{ template "metrics_enterprise.name" . }}-querier
         target: querier
         release: {{ .Release.Name }}
         {{- with .Values.querier.podLabels }}
@@ -38,7 +38,7 @@ spec:
         {{- toYaml . | nindent 8 }}
         {{- end }}
     spec:
-      serviceAccountName: {{ template "cortex.serviceAccountName" . }}
+      serviceAccountName: {{ template "metrics_enterprise.serviceAccountName" . }}
     {{- if .Values.querier.priorityClassName }}
       priorityClassName: {{ .Values.querier.priorityClassName }}
     {{- end }}
@@ -58,13 +58,13 @@ spec:
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           args:
             - "-target=querier"
-            - "-config.file=/etc/cortex/cortex.yaml"
-            - "-querier.frontend-address={{ template "cortex.fullname" . }}-query-frontend-headless.{{ .Release.Namespace }}.svc.cluster.local:{{ .Values.query_frontend.service.grpc_port}}"
+            - "-config.file=/etc/metrics-enterprise/cortex.yaml"
+            - "-querier.frontend-address={{ template "metrics_enterprise.fullname" . }}-query-frontend-headless.{{ .Release.Namespace }}.svc.cluster.local:{{ .Values.query_frontend.service.grpc_port}}"
             {{- if .Values.memcached.enabled }}
-            - "-store.chunks-cache.memcached.addresses=dns+{{ template "cortex.fullname" . }}-memcached.{{ .Release.Namespace }}.svc.cluster.local:11211"
+            - "-store.chunks-cache.memcached.addresses=dns+{{ template "metrics_enterprise.fullname" . }}-memcached.{{ .Release.Namespace }}.svc.cluster.local:11211"
             {{- end }}
             {{- if index .Values "memcached-index-read" "enabled" }}
-            - "-store.index-cache-read.memcached.addresses=dns+{{ template "cortex.fullname" . }}-memcached-index-read.{{ .Release.Namespace }}.svc.cluster.local:11211"
+            - "-store.index-cache-read.memcached.addresses=dns+{{ template "metrics_enterprise.fullname" . }}-memcached-index-read.{{ .Release.Namespace }}.svc.cluster.local:11211"
             {{- end }}
           {{- range $key, $value := .Values.querier.extraArgs }}
             - "-{{ $key }}={{ $value }}"
@@ -74,7 +74,7 @@ spec:
               {{ toYaml .Values.querier.extraVolumeMounts | nindent 12}}
             {{- end }}
             - name: config
-              mountPath: /etc/cortex
+              mountPath: /etc/metrics-enterprise
             - name: storage
               mountPath: "/data"
               subPath: {{ .Values.querier.persistence.subPath }}
@@ -110,7 +110,7 @@ spec:
 {{- if .Values.useExternalConfig }}
             secretName: {{ .Values.externalConfigSecretName }}
 {{- else }}
-            secretName: {{ template "cortex.fullname" . }}
+            secretName: {{ template "metrics_enterprise.fullname" . }}
 {{- end }}
 {{- if .Values.querier.extraVolumes }}
 {{ toYaml .Values.querier.extraVolumes | indent 8}}

@@ -1,11 +1,11 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ template "cortex.fullname" . }}-configs
+  name: {{ template "metrics_enterprise.fullname" . }}-configs
   namespace: {{ .Release.Namespace }}
   labels:
-    app: {{ template "cortex.name" . }}-configs
-    chart: {{ template "cortex.chart" . }}
+    app: {{ template "metrics_enterprise.name" . }}-configs
+    chart: {{ template "metrics_enterprise.chart" . }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
   annotations:
@@ -14,15 +14,15 @@ spec:
   replicas: {{ .Values.configs.replicas }}
   selector:
     matchLabels:
-      app: {{ template "cortex.name" . }}-configs
+      app: {{ template "metrics_enterprise.name" . }}-configs
       release: {{ .Release.Name }}
   strategy:
     {{- toYaml .Values.configs.strategy | nindent 4 }}
   template:
     metadata:
       labels:
-        app: {{ template "cortex.name" . }}-configs
-        name: {{ template "cortex.name" . }}-configs
+        app: {{ template "metrics_enterprise.name" . }}-configs
+        name: {{ template "metrics_enterprise.name" . }}-configs
         target: configs
         release: {{ .Release.Name }}
         {{- with .Values.configs.podLabels }}
@@ -38,7 +38,7 @@ spec:
         {{- toYaml . | nindent 8 }}
         {{- end }}
     spec:
-      serviceAccountName: {{ template "cortex.serviceAccountName" . }}
+      serviceAccountName: {{ template "metrics_enterprise.serviceAccountName" . }}
     {{- if .Values.configs.priorityClassName }}
       priorityClassName: {{ .Values.configs.priorityClassName }}
     {{- end }}
@@ -58,7 +58,7 @@ spec:
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           args:
             - "-target=configs"
-            - "-config.file=/etc/cortex/cortex.yaml"
+            - "-config.file=/etc/metrics-enterprise/cortex.yaml"
             {{- if .Values.configsdb_postgresql.enabled }}
             - "-configs.database.uri={{ .Values.configsdb_postgresql.uri }}"
             - "-configs.database.password-file=/etc/postgresql/password"
@@ -71,7 +71,7 @@ spec:
           {{- end }}
           volumeMounts:
             - name: config
-              mountPath: /etc/cortex
+              mountPath: /etc/metrics-enterprise
               subPath: {{ .Values.configs.persistence.subPath }}
             {{- if .Values.configsdb_postgresql.enabled }}
             - name: postgres-password
@@ -112,12 +112,12 @@ spec:
 {{- if .Values.useExternalConfig }}
             secretName: {{ .Values.externalConfigSecretName }}
 {{- else }}
-            secretName: {{ template "cortex.fullname" . }}
+            secretName: {{ template "metrics_enterprise.fullname" . }}
 {{- end }}
         {{- if .Values.configsdb_postgresql.enabled }}
         - name: postgres-password
           secret:
-            secretName: {{ if .Values.configsdb_postgresql.auth.existing_secret.name }}{{ .Values.configsdb_postgresql.auth.existing_secret.name }}{{ else }}{{ template "cortex.fullname" . }}-postgresql{{ end }}
+            secretName: {{ if .Values.configsdb_postgresql.auth.existing_secret.name }}{{ .Values.configsdb_postgresql.auth.existing_secret.name }}{{ else }}{{ template "metrics_enterprise.fullname" . }}-postgresql{{ end }}
             items:
               - key: {{ if .Values.configsdb_postgresql.auth.existing_secret.name }}{{ .Values.configsdb_postgresql.auth.existing_secret.key }}{{ else }}postgresql-password{{ end }}
                 path: password
