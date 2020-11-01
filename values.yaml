@@ -313,6 +313,9 @@ alertmanager:
   # Extra env variables to pass to the metrics-enterprise container
   env: []
 
+bootstrap:
+  extraArgs: {}
+
 distributor:
   replicas: 2
 

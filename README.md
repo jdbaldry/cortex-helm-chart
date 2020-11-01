@@ -4,6 +4,18 @@ Helm chart for deploying [Grafana Metrics Enterprise](https://grafana.com/produc
 
 ## Dependencies
 
+## Grafana Metrics Enterprise license file
+
+In order to use the enterprise features of Grafana Metrics Enterprise, you need to provide a license file to a bootsrap job. For more information, see the [Getting Started](https://grafana.com/docs/metrics-enterprise/latest/getting-started/#get-a-license) documentation.
+
+This Helm chart expects the license to be embedded in a Kubernetes secret with the name `{{ template "metrics_enterprise.fullname" . }}-license`.
+
+To create the secret from a local `license.jwt` file:
+
+```console
+$ kubectl create secret generic <cluster name>-metrics-enterprise-license- --from-file=license.jwt --dry-run=client -o yaml | kubectl apply -f -
+```
+
 ### Key-Value store
 
 Grafana Metrics Enterprise requires an externally provided key-value store, such as [etcd](https://etcd.io/) or [Consul](https://www.consul.io/).
@@ -101,6 +113,7 @@ $ helm upgrade <cluster name>  metrics-enterprise -f <values.yaml file>
 | alertmanager.strategy.type | string | `"RollingUpdate"` |  |
 | alertmanager.terminationGracePeriodSeconds | int | `60` |  |
 | alertmanager.tolerations | list | `[]` |  |
+| bootstrap.extraArgs | object | {} |  |
 | compactor.affinity.podAntiAffinity.preferredDuringSchedulingIgnoredDuringExecution[0].podAffinityTerm.labelSelector.matchExpressions[0].key | string | `"target"` |  |
 | compactor.affinity.podAntiAffinity.preferredDuringSchedulingIgnoredDuringExecution[0].podAffinityTerm.labelSelector.matchExpressions[0].operator | string | `"In"` |  |
 | compactor.affinity.podAntiAffinity.preferredDuringSchedulingIgnoredDuringExecution[0].podAffinityTerm.labelSelector.matchExpressions[0].values[0] | string | `"compactor"` |  |
