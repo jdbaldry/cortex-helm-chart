@@ -60,10 +60,10 @@ spec:
           args:
             - "-target=ingester"
             - "-config.file=/etc/metrics-enterprise/cortex.yaml"
-            {{- if .Values.memcached.enabled }}
+            {{- if and (.Values.memcached.enabled) (eq .Values.config.storage.engine "chunks") }}
             - -store.chunks-cache.memcached.addresses=dns+{{ template "metrics_enterprise.fullname" . }}-memcached.{{ .Release.Namespace }}.svc.cluster.local:11211
             {{- end }}
-            {{- if index .Values "memcached-index-write" "enabled" }}
+            {{- if and (index .Values "memcached-index-write" "enabled") (eq .Values.config.storage.engine "chunks") }}
             - -store.index-cache-write.memcached.addresses=dns+{{ template "metrics_enterprise.fullname" . }}-memcached-index-write.{{ .Release.Namespace }}.svc.cluster.local:11211
             {{- end }}
             {{- range $key, $value := .Values.ingester.extraArgs }}
