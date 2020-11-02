@@ -39,6 +39,7 @@ externalConfigVersion: '0'
 
 config:
   auth_enabled: false
+
   ingester:
     max_transfer_retries: 0
     lifecycler:
@@ -58,74 +59,27 @@ config:
     enforce_metric_name: false
     reject_old_samples: true
     reject_old_samples_max_age: 168h
-  schema:
-    configs:
-      - from: 2019-07-29
-        store: cassandra
-        object_store: cassandra
-        schema: v10
-        index:
-          prefix: index_
-          period: 168h
+
   server:
     http_listen_port: 8080
     grpc_listen_port: 9095
     grpc_server_max_recv_msg_size: 104857600
     grpc_server_max_send_msg_size: 104857600
     grpc_server_max_concurrent_streams: 1000
+
   ingester_client:
     grpc_client_config:
       max_recv_msg_size: 104857600
       max_send_msg_size: 104857600
       use_gzip_compression: true
+
   # See https://github.com/metrics-enterpriseproject/cortex/blob/master/docs/configuration/config-file-reference.md#storage_config
   storage:
-    engine: chunks
-    cassandra:
-      addresses: # configure cassandra addresses here.
-      keyspace: metrics-enterprise # configure desired keyspace here.
-      auth: true
-      username: # configure cassandra user here.
-      password: # configure cassandra password here.
-    azure:
-      container_name: # configure azure blob container name here.
-      account_name: # configure azure storage account name here.
-      account_key: # configure azure storage account key here.
-    # aws:
-    #   dynamodb:
-    #     dynamodb_url:
-    #     api_limit:
-    #     throttle_limit:
-    #     metrics:
-    #       url:
-    #       target_queue_length:
-    #       scale_up_factor:
-    #       ignore_throttle_below:
-    #       queue_length_query:
-    #       write_throttle_query:
-    #       write_usage_query:
-    #       read_usage_query:
-    #       read_error_query:
-    #     chunk_gang_size:
-    #     chunk_get_max_parallelism:
-    #   s3:
-    #   bucketnames:
-    #   s3forcepathstyle:
-    index_queries_cache_config:
-      memcached:
-        expiration: 1h
-      memcached_client:
-        timeout: 1s
-  chunk_store:
-    max_look_back_period: 0s
-    chunk_cache_config:
-      memcached:
-        expiration: 1h
-      memcached_client:
-        timeout: 1s
-  table_manager:
-    retention_deletes_enabled: false
-    retention_period: 0s
+    engine: blocks
+  # This configures how the store-gateway synchronizes blocks stored in the bucket. It uses Minio by default for getting started but this should be changed for production deployments.
+  blocks_storage:
+    backend: s3
+
   distributor:
     shard_by_all_labels: true
     pool:
@@ -1312,3 +1266,10 @@ configsdb_postgresql:
     existing_secret:
       name:
       key:
+
+minio:
+  enabled: true
+  accessKey: metrics-enterprise
+  secretKey: supersecret
+  buckets:
+    - name: metrics-enterprise-tsdb

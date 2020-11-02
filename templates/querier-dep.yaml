@@ -66,6 +66,13 @@ spec:
             {{- if and (index .Values "memcached-index-read" "enabled") (eq .Values.config.storage.engine "chunks") }}
             - "-store.index-cache-read.memcached.addresses=dns+{{ template "metrics_enterprise.fullname" . }}-memcached-index-read.{{ .Release.Namespace }}.svc.cluster.local:11211"
             {{- end }}
+            {{- if .Values.minio.enabled }}
+            - -blocks-storage.s3.endpoint={{ "metrics_enterprise.fullname" . }}-minio.{{ .Release.Namespace }}.svc.cluster.local:9000
+            - -blocks-storage.s3.bucket-name=metrics-enterprise-tsdb
+            - -blocks-storage.s3.access-key-id=metrics-enterprise
+            - -blocks-storage.s3.secret-access-key=supersecret
+            - -blocks-storage.s3.insecure=true
+            {{- end }}
             {{- if and (index .Values "memcached-metadata" "enabled") (eq .Values.config.storage.engine "blocks") }}
             - "-blocks-storage.bucket-store.metadata-cache.backend=memcached"
             - "-blocks-storage.bucket-store.metadata-cache.addresses=dns+{{ template "metrics_enterprise.fullname" . }}-memcached-metadata.{{ .Release.Namespace }}.svc.cluster.local:11211"
