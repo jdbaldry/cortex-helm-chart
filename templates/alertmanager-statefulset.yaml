@@ -3,11 +3,11 @@
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: {{ template "cortex.fullname" . }}-alertmanager
+  name: {{ template "metrics_enterprise.fullname" . }}-alertmanager
   namespace: {{ .Release.Namespace }}
   labels:
-    app: {{ template "cortex.name" . }}-alertmanager
-    chart: {{ template "cortex.chart" . }}
+    app: {{ template "metrics_enterprise.name" . }}-alertmanager
+    chart: {{ template "metrics_enterprise.chart" . }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
   annotations:
@@ -16,11 +16,11 @@ spec:
   replicas: {{ .Values.alertmanager.replicas }}
   selector:
     matchLabels:
-      app: {{ template "cortex.name" . }}-alertmanager
+      app: {{ template "metrics_enterprise.name" . }}-alertmanager
       release: {{ .Release.Name }}
   updateStrategy:
     {{- toYaml .Values.alertmanager.statefulStrategy | nindent 4 }}          
-  serviceName: {{ template "cortex.fullname" . }}-alertmanager
+  serviceName: {{ template "metrics_enterprise.fullname" . }}-alertmanager
   {{- if .Values.alertmanager.persistentVolume.enabled }}
   volumeClaimTemplates:
     - metadata:
@@ -46,8 +46,8 @@ spec:
   template:
     metadata:
       labels:
-        app: {{ template "cortex.name" . }}-alertmanager
-        name: {{ template "cortex.name" . }}-alertmanager
+        app: {{ template "metrics_enterprise.name" . }}-alertmanager
+        name: {{ template "metrics_enterprise.name" . }}-alertmanager
         target: alertmanager
         release: {{ .Release.Name }}
         {{- with .Values.alertmanager.podLabels }}
@@ -63,7 +63,7 @@ spec:
         {{- toYaml . | nindent 8 }}
         {{- end }}
     spec:
-      serviceAccountName: {{ template "cortex.serviceAccountName" . }}
+      serviceAccountName: {{ template "metrics_enterprise.serviceAccountName" . }}
       {{- if .Values.alertmanager.priorityClassName }}
       priorityClassName: {{ .Values.alertmanager.priorityClassName }}
       {{- end }}
@@ -90,7 +90,7 @@ spec:
             {{- if .Values.useExternalConfig }}
             secretName: {{ .Values.externalConfigSecretName }}
             {{- else }}
-            secretName: {{ template "cortex.fullname" . }}
+            secretName: {{ template "metrics_enterprise.fullname" . }}
             {{- end }}
         {{- if not .Values.alertmanager.persistentVolume.enabled }}
         - name: storage
@@ -108,11 +108,11 @@ spec:
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           args:
             - "-target=alertmanager"
-            - "-config.file=/etc/cortex/cortex.yaml"
-            - "-alertmanager.configs.url=http://{{ template "cortex.fullname" . }}-configs.{{ .Release.Namespace }}.svc.cluster.local:{{ .Values.config.server.http_listen_port }}"
+            - "-config.file=/etc/metrics-enterprise/cortex.yaml"
+            - "-alertmanager.configs.url=http://{{ template "metrics_enterprise.fullname" . }}-configs.{{ .Release.Namespace }}.svc.cluster.local:{{ .Values.config.server.http_listen_port }}"
             {{- if gt (.Values.alertmanager.replicas | int) 1 }}
             {{- range $n := until (.Values.alertmanager.replicas |int ) }}
-            - -cluster.peer={{ template "cortex.fullname" $ }}-alertmanager-{{ $n }}.{{ template "cortex.fullname" $ }}-alertmanager-headless.{{ $.Release.Namespace }}.svc.cluster.local:{{ $clusterPort }}
+            - -cluster.peer={{ template "metrics-enterprise.fullname" $ }}-alertmanager-{{ $n }}.{{ template "metrics_enterprise.fullname" $ }}-alertmanager-headless.{{ $.Release.Namespace }}.svc.cluster.local:{{ $clusterPort }}
             {{- end }}
             {{- end }}
             {{- range $key, $value := .Values.alertmanager.extraArgs }}
@@ -123,7 +123,7 @@ spec:
             {{ toYaml .Values.alertmanager.extraVolumeMounts | nindent 12}}
             {{- end }}
             - name: config
-              mountPath: /etc/cortex
+              mountPath: /etc/metrics-enterprise
             - name: storage
               mountPath: "/data"
               {{- if .Values.alertmanager.persistentVolume.subPath }}

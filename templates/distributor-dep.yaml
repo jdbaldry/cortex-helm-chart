@@ -1,11 +1,11 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ template "cortex.fullname" . }}-distributor
+  name: {{ template "metrics_enterprise.fullname" . }}-distributor
   namespace: {{ .Release.Namespace }}
   labels:
-    app: {{ template "cortex.name" . }}-distributor
-    chart: {{ template "cortex.chart" . }}
+    app: {{ template "metrics_enterprise.name" . }}-distributor
+    chart: {{ template "metrics_enterprise.chart" . }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
   annotations:
@@ -14,15 +14,15 @@ spec:
   replicas: {{ .Values.distributor.replicas }}
   selector:
     matchLabels:
-      app: {{ template "cortex.name" . }}-distributor
+      app: {{ template "metrics_enterprise.name" . }}-distributor
       release: {{ .Release.Name }}
   strategy:
     {{- toYaml .Values.distributor.strategy | nindent 4 }}
   template:
     metadata:
       labels:
-        app: {{ template "cortex.name" . }}-distributor
-        name: {{ template "cortex.name" . }}-distributor
+        app: {{ template "metrics_enterprise.name" . }}-distributor
+        name: {{ template "metrics_enterprise.name" . }}-distributor
         target: distributor
         release: {{ .Release.Name }}
         {{- with .Values.distributor.podLabels }}
@@ -38,7 +38,7 @@ spec:
         {{- toYaml . | nindent 8 }}
         {{- end }}
     spec:
-      serviceAccountName: {{ template "cortex.serviceAccountName" . }}
+      serviceAccountName: {{ template "metrics_enterprise.serviceAccountName" . }}
     {{- if .Values.distributor.priorityClassName }}
       priorityClassName: {{ .Values.distributor.priorityClassName }}
     {{- end }}
@@ -58,7 +58,7 @@ spec:
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           args:
             - "-target=distributor"
-            - "-config.file=/etc/cortex/cortex.yaml"
+            - "-config.file=/etc/metrics-enterprise/cortex.yaml"
           {{- range $key, $value := .Values.distributor.extraArgs }}
             - "-{{ $key }}={{ $value }}"
           {{- end }}
@@ -67,7 +67,7 @@ spec:
               {{ toYaml .Values.distributor.extraVolumeMounts | nindent 12}}
             {{- end }}
             - name: config
-              mountPath: /etc/cortex
+              mountPath: /etc/metrics-enterprise
             - name: storage
               mountPath: "/data"
               subPath: {{ .Values.distributor.persistence.subPath }}
@@ -103,7 +103,7 @@ spec:
 {{- if .Values.useExternalConfig }}
             secretName: {{ .Values.externalConfigSecretName }}
 {{- else }}
-            secretName: {{ template "cortex.fullname" . }}
+            secretName: {{ template "metrics_enterprise.fullname" . }}
 {{- end }}
 {{- if .Values.distributor.extraVolumes }}
 {{ toYaml .Values.distributor.extraVolumes | indent 8}}

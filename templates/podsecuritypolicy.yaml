@@ -2,11 +2,11 @@
 apiVersion: policy/v1beta1
 kind: PodSecurityPolicy
 metadata:
-  name: {{ template "cortex.fullname" . }}
+  name: {{ template "metrics_enterprise.fullname" . }}
   namespace: {{ .Release.Namespace }}
   labels:
-    app: {{ template "cortex.name" . }}
-    chart: {{ template "cortex.chart" . }}
+    app: {{ template "metrics_enterprise.name" . }}
+    chart: {{ template "metrics_enterprise.chart" . }}
     heritage: {{ .Release.Service }}
     release: {{ .Release.Name }}
 spec:

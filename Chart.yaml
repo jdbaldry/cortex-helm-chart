@@ -1,17 +1,14 @@
 apiVersion: v2
 version: 0.1.2
-appVersion: v1.1.0
-description: 'Cortex'
+appVersion: v1.0.2
+description: 'Grafana Metrics Enterprise'
 engine: gotpl
-home: https://cortexmetrics.io/
-icon: https://avatars2.githubusercontent.com/u/43045022?s=200&v=4
+home: https://grafana.com/products/metrics-enterprise/
+icon: https://grafana.com/static/img/menu/metrics-enterprise.svg
 kubeVersion: ^1.10.0-0
-maintainers:
-- email: cortex-team@googlegroups.com
-  name: Cortex Maintainers
-name: cortex
+name: metrics-enterprise
 sources:
-- https://github.com/cortexproject/cortex-helm-chart
+- https://github.com/grafana/metrics-enterprise-helm-chart
 dependencies:
   - name: memcached
     alias: memcached

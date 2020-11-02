@@ -2,8 +2,8 @@
 ## Since the image is unique for all microservices, so are image settings.
 
 image:
-  repository: quay.io/cortexproject/cortex
-  tag: v1.1.0
+  repository: grafana/metrics-enterprise
+  tag: v1.0.2
   pullPolicy: IfNotPresent
 
 
@@ -78,12 +78,12 @@ config:
       max_recv_msg_size: 104857600
       max_send_msg_size: 104857600
       use_gzip_compression: true
-  # See https://github.com/cortexproject/cortex/blob/master/docs/configuration/config-file-reference.md#storage_config
+  # See https://github.com/metrics-enterpriseproject/cortex/blob/master/docs/configuration/config-file-reference.md#storage_config
   storage:
     engine: chunks
     cassandra:
       addresses: # configure cassandra addresses here.
-      keyspace: cortex # configure desired keyspace here.
+      keyspace: metrics-enterprise # configure desired keyspace here.
       auth: true
       username: # configure cassandra user here.
       password: # configure cassandra password here.
@@ -131,7 +131,7 @@ config:
     pool:
       health_check_ingesters: true
   querier:
-    active_query_tracker_dir: /data/cortex/querier
+    active_query_tracker_dir: /data/metrics-enterprise/querier
     query_ingesters_within: 12h
   query_range:
     split_queries_by_interval: 24h
@@ -177,7 +177,7 @@ alertmanager:
       cpu: 10m
       memory: 32Mi
 
-  ## Additional Cortex container arguments, e.g. log level (debug, info, warn, error)
+  ## Additional Grafana Metrics Enterprise container arguments, e.g. log level (debug, info, warn, error)
   extraArgs:
     {}
     # log.level: debug
@@ -273,13 +273,13 @@ alertmanager:
   terminationGracePeriodSeconds: 60
 
   initContainers: []
-  ## Init containers to be added to the cortex pod.
+  ## Init containers to be added to the metrics-enterprise pod.
   # - name: my-init-container
   #   image: busybox:latest
   #   command: ['sh', '-c', 'echo hello']
 
   extraContainers: []
-  ## Additional containers to be added to the cortex pod.
+  ## Additional containers to be added to the metrics-enterprise pod.
   # - name: reverse-proxy
   #   image: angelbarrera92/basic-auth-reverse-proxy:dev
   #   args:
@@ -295,22 +295,22 @@ alertmanager:
   #       mountPath: /etc/reverse-proxy-conf
 
   extraVolumes: []
-  ## Additional volumes to the cortex pod.
+  ## Additional volumes to the metrics-enterprise pod.
   # - name: reverse-proxy-auth-config
   #   secret:
   #     secretName: reverse-proxy-auth-config
 
-  ## Extra volume mounts that will be added to the cortex container
+  ## Extra volume mounts that will be added to the metrics-enterprise container
   extraVolumeMounts: []
 
   extraPorts: []
-  ## Additional ports to the cortex services. Useful to expose extra container ports.
+  ## Additional ports to the metrics-enterprise services. Useful to expose extra container ports.
   # - port: 11811
   #   protocol: TCP
   #   name: http
   #   targetPort: http
 
-  # Extra env variables to pass to the cortex container
+  # Extra env variables to pass to the metrics-enterprise container
   env: []
 
 distributor:
@@ -328,7 +328,7 @@ distributor:
       cpu: 100m
       memory: 512Mi
 
-  ## Additional Cortex container arguments, e.g. log level (debug, info, warn, error)
+  ## Additional Grafana Metrics Enterprise container arguments, e.g. log level (debug, info, warn, error)
   extraArgs:
     {}
     # log.level: debug
@@ -410,7 +410,7 @@ ingester:
       cpu: 100m
       memory: 512Mi
 
-  ## Additional Cortex container arguments, e.g. log level (debug, info, warn, error)
+  ## Additional Grafana Metrics Enterprise container arguments, e.g. log level (debug, info, warn, error)
   extraArgs:
     {}
     # log.level: debug
@@ -532,7 +532,7 @@ ruler:
       cpu: 10m
       memory: 32Mi
 
-  ## Additional Cortex container arguments, e.g. log level (debug, info, warn, error)
+  ## Additional Grafana Metrics Enterprise container arguments, e.g. log level (debug, info, warn, error)
   extraArgs:
     {}
     # log.level: debug
@@ -596,7 +596,7 @@ querier:
       cpu: 50m
       memory: 128Mi
 
-  ## Additional Cortex container arguments, e.g. log level (debug, info, warn, error)
+  ## Additional Grafana Metrics Enterprise container arguments, e.g. log level (debug, info, warn, error)
   extraArgs:
     {}
     # log.level: debug
@@ -672,7 +672,7 @@ query_frontend:
       cpu: 10m
       memory: 32Mi
 
-  ## Additional Cortex container arguments, e.g. log level (debug, info, warn, error)
+  ## Additional Grafana Metrics Enterprise container arguments, e.g. log level (debug, info, warn, error)
   extraArgs:
     {}
     # log.level: debug
@@ -748,7 +748,7 @@ table_manager:
       cpu: 10m
       memory: 32Mi
 
-  ## Additional Cortex container arguments, e.g. log level (debug, info, warn, error)
+  ## Additional Grafana Metrics Enterprise container arguments, e.g. log level (debug, info, warn, error)
   extraArgs:
     {}
     # log.level: debug
@@ -812,7 +812,7 @@ configs:
       cpu: 10m
       memory: 32Mi
 
-  ## Additional Cortex container arguments, e.g. log level (debug, info, warn, error)
+  ## Additional Grafana Metrics Enterprise container arguments, e.g. log level (debug, info, warn, error)
   extraArgs:
     {}
     # log.level: debug
@@ -884,7 +884,7 @@ nginx:
       cpu: 10m
       memory: 16Mi
 
-  ## Additional Cortex container arguments, e.g. log level (debug, info, warn, error)
+  ## Additional Grafana Metrics Enterprise container arguments, e.g. log level (debug, info, warn, error)
   extraArgs:
     {}
     # log.level: debug
@@ -948,7 +948,7 @@ store_gateway:
       cpu: 100m
       memory: 512Mi
 
-  ## Additional Cortex container arguments, e.g. log level (debug, info, warn, error)
+  ## Additional Grafana Metrics Enterprise container arguments, e.g. log level (debug, info, warn, error)
   extraArgs:
     {}
     # log.level: debug
@@ -1061,7 +1061,7 @@ compactor:
       cpu: 100m
       memory: 512Mi
 
-  ## Additional Cortex container arguments, e.g. log level (debug, info, warn, error)
+  ## Additional Grafana Metrics Enterprise container arguments, e.g. log level (debug, info, warn, error)
   extraArgs:
     {}
     # log.level: debug
@@ -1180,7 +1180,7 @@ memcached:
   #tolerations: {}
   # - key: "dedicated"
   #   operator: "Equal"
-  #   value: "cortex-memcached"
+  #   value: "metrics-enterprise-memcached"
   #   effect: "NoSchedule"
   #affinity: {}
   #   nodeAffinity:
@@ -1190,7 +1190,7 @@ memcached:
   #           - key: dedicated
   #             operator: In
   #             values:
-  #             - cortex-memcached
+  #             - metrics-enterprise-memcached
 
 # index read caching
 memcached-index-read:
@@ -1215,7 +1215,7 @@ memcached-index-read:
   #tolerations: []
   # - key: "dedicated"
   #   operator: "Equal"
-  #   value: "cortex-memcached"
+  #   value: "metrics-enterprise-memcached"
   #   effect: "NoSchedule"
   #affinity: {}
   #   nodeAffinity:
@@ -1225,7 +1225,7 @@ memcached-index-read:
   #           - key: dedicated
   #             operator: In
   #             values:
-  #             - cortex-memcached
+  #             - metrics-enterprise-memcached
 
 # index write caching
 memcached-index-write:
@@ -1250,7 +1250,7 @@ memcached-index-write:
   #tolerations: []
   # - key: "dedicated"
   #   operator: "Equal"
-  #   value: "cortex-memcached"
+  #   value: "metrics-enterprise-memcached"
   #   effect: "NoSchedule"
   # affinity: {}
   #   nodeAffinity:
@@ -1260,7 +1260,7 @@ memcached-index-write:
   #           - key: dedicated
   #             operator: In
   #             values:
-  #             - cortex-memcached
+  #             - metrics-enterprise-memcached
 
 configsdb_postgresql:
   enabled: false

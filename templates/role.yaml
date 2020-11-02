@@ -2,11 +2,11 @@
 apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
-  name: {{ template "cortex.fullname" . }}
+  name: {{ template "metrics_enterprise.fullname" . }}
   namespace: {{ .Release.Namespace }}
   labels:
-    app: {{ template "cortex.name" . }}
-    chart: {{ template "cortex.chart" . }}
+    app: {{ template "metrics_enterprise.name" . }}
+    chart: {{ template "metrics_enterprise.chart" . }}
     heritage: {{ .Release.Service }}
     release: {{ .Release.Name }}
 {{- if .Values.rbac.pspEnabled }}
@@ -14,7 +14,7 @@ rules:
 - apiGroups:      ['extensions']
   resources:      ['podsecuritypolicies']
   verbs:          ['use']
-  resourceNames:  [{{ template "cortex.fullname" . }}]
+  resourceNames:  [{{ template "metrics_enterprise.fullname" . }}]
 {{- end }}
 {{- end }}
 

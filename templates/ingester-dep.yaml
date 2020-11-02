@@ -2,11 +2,11 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ template "cortex.fullname" . }}-ingester
+  name: {{ template "metrics_enterprise.fullname" . }}-ingester
   namespace: {{ .Release.Namespace }}
   labels:
-    app: {{ template "cortex.name" . }}-ingester
-    chart: {{ template "cortex.chart" . }}
+    app: {{ template "metrics_enterprise.name" . }}-ingester
+    chart: {{ template "metrics_enterprise.chart" . }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
   annotations:
@@ -15,15 +15,15 @@ spec:
   replicas: {{ .Values.ingester.replicas }}
   selector:
     matchLabels:
-      app: {{ template "cortex.name" . }}-ingester
+      app: {{ template "metrics_enterprise.name" . }}-ingester
       release: {{ .Release.Name }}
   strategy:
     {{- toYaml .Values.ingester.strategy | nindent 4 }}
   template:
     metadata:
       labels:
-        app: {{ template "cortex.name" . }}-ingester
-        name: {{ template "cortex.name" . }}-ingester
+        app: {{ template "metrics_enterprise.name" . }}-ingester
+        name: {{ template "metrics_enterprise.name" . }}-ingester
         target: ingester
         release: {{ .Release.Name }}
         {{- with .Values.ingester.podLabels }}
@@ -39,7 +39,7 @@ spec:
         {{- toYaml . | nindent 8 }}
         {{- end }}
     spec:
-      serviceAccountName: {{ template "cortex.serviceAccountName" . }}
+      serviceAccountName: {{ template "metrics_enterprise.serviceAccountName" . }}
       {{- if .Values.ingester.priorityClassName }}
       priorityClassName: {{ .Values.ingester.priorityClassName }}
       {{- end }}
@@ -59,12 +59,12 @@ spec:
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           args:
             - "-target=ingester"
-            - "-config.file=/etc/cortex/cortex.yaml"
+            - "-config.file=/etc/metrics-enterprise/cortex.yaml"
             {{- if .Values.memcached.enabled }}
-            - -store.chunks-cache.memcached.addresses=dns+{{ template "cortex.fullname" . }}-memcached.{{ .Release.Namespace }}.svc.cluster.local:11211
+            - -store.chunks-cache.memcached.addresses=dns+{{ template "metrics_enterprise.fullname" . }}-memcached.{{ .Release.Namespace }}.svc.cluster.local:11211
             {{- end }}
             {{- if index .Values "memcached-index-write" "enabled" }}
-            - -store.index-cache-write.memcached.addresses=dns+{{ template "cortex.fullname" . }}-memcached-index-write.{{ .Release.Namespace }}.svc.cluster.local:11211
+            - -store.index-cache-write.memcached.addresses=dns+{{ template "metrics_enterprise.fullname" . }}-memcached-index-write.{{ .Release.Namespace }}.svc.cluster.local:11211
             {{- end }}
             {{- range $key, $value := .Values.ingester.extraArgs }}
             - "-{{ $key }}={{ $value }}"
@@ -74,7 +74,7 @@ spec:
               {{ toYaml .Values.ingester.extraVolumeMounts | nindent 12}}
             {{- end }}
             - name: config
-              mountPath: /etc/cortex
+              mountPath: /etc/metrics-enterprise
             - name: storage
               mountPath: "/data"
               {{- if .Values.ingester.persistentVolume.subPath }}
@@ -117,7 +117,7 @@ spec:
           {{- if .Values.useExternalConfig }}
             secretName: {{ .Values.externalConfigSecretName }}
           {{- else }}
-            secretName: {{ template "cortex.fullname" . }}
+            secretName: {{ template "metrics_enterprise.fullname" . }}
           {{- end }}
         {{- if .Values.ingester.extraVolumes }}
         {{ toYaml .Values.ingester.extraVolumes | nindent 8}}

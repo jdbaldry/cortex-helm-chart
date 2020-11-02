@@ -1,0 +1,22 @@
+#!/usr/bin/env bash
+
+set -euf -o pipefail
+
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+DRYRUN="${DRYRUN:-1}"
+SED=sed
+
+if [[ "${DRYRUN}" -eq 0 ]]; then
+    SED="${SED} -i"
+fi
+
+FIND="find . -name README.md -prune -o -name tools -prune -o -name .git -prune -o -name charts -prune -o -type f -exec grep -Iq . {} + -print"
+
+# First replace all instances of 'cortex' that are within Go templates with 'metrics_enterprise'.
+${FIND} | xargs ${SED} -e 's \({{.*\)cortex\(.*}}\) \1metrics_enterprise\2 '
+
+# Replace all capitalized instances of 'Cortex' with 'Grafana Metrics Enterprise'.
+${FIND} | xargs ${SED} -e 's/Cortex/Grafana Metrics Enterprise/'
+
+# Finally replace all remaining instances of 'cortex' with 'metrics-enterprise'.
+${FIND} | xargs ${SED} -e 's/cortex/metrics-enterprise/'

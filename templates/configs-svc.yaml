@@ -1,11 +1,11 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ template "cortex.fullname" . }}-configs
+  name: {{ template "metrics_enterprise.fullname" . }}-configs
   namespace: {{ .Release.Namespace }}
   labels:
-    app: {{ template "cortex.name" . }}-configs
-    chart: {{ template "cortex.chart" . }}
+    app: {{ template "metrics_enterprise.name" . }}-configs
+    chart: {{ template "metrics_enterprise.chart" . }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
     {{- with .Values.configs.service.labels }}
@@ -21,5 +21,5 @@ spec:
       name: http-metrics
       targetPort: http-metrics
   selector:
-    app: {{ template "cortex.name" . }}-configs
+    app: {{ template "metrics_enterprise.name" . }}-configs
     release: {{ .Release.Name }}

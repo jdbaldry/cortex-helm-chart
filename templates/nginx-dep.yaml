@@ -2,11 +2,11 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ template "cortex.fullname" . }}-nginx
+  name: {{ template "metrics_enterprise.fullname" . }}-nginx
   namespace: {{ .Release.Namespace }}
   labels:
-    app: {{ template "cortex.name" . }}-nginx
-    chart: {{ template "cortex.chart" . }}
+    app: {{ template "metrics_enterprise.name" . }}-nginx
+    chart: {{ template "metrics_enterprise.chart" . }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
   annotations:
@@ -15,15 +15,15 @@ spec:
   replicas: {{ .Values.nginx.replicas }}
   selector:
     matchLabels:
-      app: {{ template "cortex.name" . }}-nginx
+      app: {{ template "metrics_enterprise.name" . }}-nginx
       release: {{ .Release.Name }}
   strategy:
     {{- toYaml .Values.nginx.strategy | nindent 4 }}
   template:
     metadata:
       labels:
-        app: {{ template "cortex.name" . }}-nginx
-        name: {{ template "cortex.name" . }}-nginx
+        app: {{ template "metrics_enterprise.name" . }}-nginx
+        name: {{ template "metrics_enterprise.name" . }}-nginx
         release: {{ .Release.Name }}
         {{- with .Values.nginx.podLabels }}
         {{- toYaml . | nindent 8 }}
@@ -34,7 +34,7 @@ spec:
         {{- toYaml . | nindent 8 }}
         {{- end }}
     spec:
-      serviceAccountName: {{ template "cortex.serviceAccountName" . }}
+      serviceAccountName: {{ template "metrics_enterprise.serviceAccountName" . }}
     {{- if .Values.nginx.priorityClassName }}
       priorityClassName: {{ .Values.nginx.priorityClassName }}
     {{- end }}
@@ -93,7 +93,7 @@ spec:
       volumes:
         - name: config
           configMap:
-            name: {{ template "cortex.fullname" . }}-nginx
+            name: {{ template "metrics_enterprise.fullname" . }}-nginx
 {{- if .Values.nginx.extraVolumes }}
 {{ toYaml .Values.nginx.extraVolumes | indent 8}}
 {{- end }}

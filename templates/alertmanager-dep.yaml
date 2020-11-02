@@ -2,11 +2,11 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ template "cortex.fullname" . }}-alertmanager
+  name: {{ template "metrics_enterprise.fullname" . }}-alertmanager
   namespace: {{ .Release.Namespace }}
   labels:
-    app: {{ template "cortex.name" . }}-alertmanager
-    chart: {{ template "cortex.chart" . }}
+    app: {{ template "metrics_enterprise.name" . }}-alertmanager
+    chart: {{ template "metrics_enterprise.chart" . }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
   annotations:
@@ -15,15 +15,15 @@ spec:
   replicas: {{ .Values.alertmanager.replicas }}
   selector:
     matchLabels:
-      app: {{ template "cortex.name" . }}-alertmanager
+      app: {{ template "metrics_enterprise.name" . }}-alertmanager
       release: {{ .Release.Name }}
   strategy:
     {{- toYaml .Values.alertmanager.strategy | nindent 4 }}
   template:
     metadata:
       labels:
-        app: {{ template "cortex.name" . }}-alertmanager
-        name: {{ template "cortex.name" . }}-alertmanager
+        app: {{ template "metrics_enterprise.name" . }}-alertmanager
+        name: {{ template "metrics_enterprise.name" . }}-alertmanager
         target: alertmanager
         release: {{ .Release.Name }}
         {{- with .Values.alertmanager.podLabels }}
@@ -39,7 +39,7 @@ spec:
         {{- toYaml . | nindent 8 }}
         {{- end }}
     spec:
-      serviceAccountName: {{ template "cortex.serviceAccountName" . }}
+      serviceAccountName: {{ template "metrics_enterprise.serviceAccountName" . }}
     {{- if .Values.alertmanager.priorityClassName }}
       priorityClassName: {{ .Values.query_frontend.priorityClassName }}
     {{- end }}
@@ -59,8 +59,8 @@ spec:
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           args:
             - "-target=alertmanager"
-            - "-config.file=/etc/cortex/cortex.yaml"
-            - "-alertmanager.configs.url=http://{{ template "cortex.fullname" . }}-configs.{{ .Release.Namespace }}.svc.cluster.local:{{ .Values.config.server.http_listen_port }}"
+            - "-config.file=/etc/metrics-enterprise/cortex.yaml"
+            - "-alertmanager.configs.url=http://{{ template "metrics_enterprise.fullname" . }}-configs.{{ .Release.Namespace }}.svc.cluster.local:{{ .Values.config.server.http_listen_port }}"
           {{- range $key, $value := .Values.alertmanager.extraArgs }}
             - "-{{ $key }}={{ $value }}"
           {{- end }}
@@ -69,7 +69,7 @@ spec:
               {{ toYaml .Values.alertmanager.extraVolumeMounts | nindent 12}}
             {{- end }}
             - name: config
-              mountPath: /etc/cortex
+              mountPath: /etc/metrics-enterprise
             - name: storage
               mountPath: "/data"
               subPath: {{ .Values.alertmanager.persistence.subPath }}
@@ -105,7 +105,7 @@ spec:
 {{- if .Values.useExternalConfig }}
             secretName: {{ .Values.externalConfigSecretName }}
 {{- else }}
-            secretName: {{ template "cortex.fullname" . }}
+            secretName: {{ template "metrics_enterprise.fullname" . }}
 {{- end }}
 {{- if .Values.alertmanager.extraVolumes }}
 {{ toYaml .Values.alertmanager.extraVolumes | indent 8}}
