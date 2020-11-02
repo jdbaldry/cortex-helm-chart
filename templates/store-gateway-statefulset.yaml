@@ -107,7 +107,7 @@ spec:
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           args:
             - "-target=store-gateway"
-            - "-config.file=/etc/metrics-enterprise/cortex.yaml"
+            - "-config.file=/etc/metrics-enterprise/metrics-enterprise.yaml"
             {{- if .Values.minio.enabled }}
             - -blocks-storage.s3.endpoint={{ template "metrics_enterprise.fullname" . }}-minio.{{ .Release.Namespace }}.svc.cluster.local:9000
             - -blocks-storage.s3.bucket-name=metrics-enterprise-tsdb

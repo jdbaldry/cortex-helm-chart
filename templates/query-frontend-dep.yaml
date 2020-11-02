@@ -58,7 +58,7 @@ spec:
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           args:
             - "-target=query-frontend"
-            - "-config.file=/etc/metrics-enterprise/cortex.yaml"
+            - "-config.file=/etc/metrics-enterprise/metrics-enterprise.yaml"
           {{- range $key, $value := .Values.query_frontend.extraArgs }}
             - "-{{ $key }}={{ $value }}"
           {{- end }}

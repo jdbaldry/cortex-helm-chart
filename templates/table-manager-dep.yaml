@@ -59,7 +59,7 @@ spec:
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           args:
             - "-target=table-manager"
-            - "-config.file=/etc/metrics-enterprise/cortex.yaml"
+            - "-config.file=/etc/metrics-enterprise/metrics-enterprise.yaml"
           {{- range $key, $value := .Values.table_manager.extraArgs }}
             - "-{{ $key }}={{ $value }}"
           {{- end }}

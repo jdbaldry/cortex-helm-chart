@@ -58,7 +58,7 @@ spec:
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           args:
             - "-target=configs"
-            - "-config.file=/etc/metrics-enterprise/cortex.yaml"
+            - "-config.file=/etc/metrics-enterprise/metrics-enterprise.yaml"
             {{- if .Values.configsdb_postgresql.enabled }}
             - "-configs.database.uri={{ .Values.configsdb_postgresql.uri }}"
             - "-configs.database.password-file=/etc/postgresql/password"

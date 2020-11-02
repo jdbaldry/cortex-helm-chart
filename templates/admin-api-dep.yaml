@@ -4,25 +4,25 @@ metadata:
   annotations:
     {{- toYaml .Values.admin_api.annotations | nindent 4 }}
   labels:
-    app: {{ template "cortex.name" . }}-admin-api
-    chart: {{ template "cortex.chart" . }}
+    app: {{ template "metrics_enterprise.name" . }}-admin-api
+    chart: {{ template "metrics_enterprise.chart" . }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
-  name: {{ template "cortex.fullname" . }}-admin-api
+  name: {{ template "metrics_enterprise.fullname" . }}-admin-api
   namespace: {{ .Release.Namespace }}
 spec:
   replicas: {{ .Values.admin_api.replicas }}
   selector:
     matchLabels:
-      app: {{ template "cortex.name" . }}-admin-api
+      app: {{ template "metrics_enterprise.name" . }}-admin-api
       release: {{ .Release.Name }}
   strategy:
     {{- toYaml .Values.admin_api.strategy | nindent 4 }}
   template:
     metadata:
       labels:
-        app: {{ template "cortex.name" . }}-admin-api
-        name: {{ template "cortex.name" . }}-admin-api
+        app: {{ template "metrics_enterprise.name" . }}-admin-api
+        name: {{ template "metrics_enterprise.name" . }}-admin-api
         target: admin-api
         release: {{ .Release.Name }}
         {{- with .Values.admin_api.podLabels }}
@@ -38,7 +38,7 @@ spec:
         {{- toYaml . | nindent 8 }}
         {{- end }}
     spec:
-      serviceAccountName: {{ template "cortex.serviceAccountName" . }}
+      serviceAccountName: {{ template "metrics_enterprise.serviceAccountName" . }}
       {{- if .Values.admin_api.priorityClassName }}
       priorityClassName: {{ .Values.admin_api.priorityClassName }}
       {{- end }}
@@ -58,7 +58,6 @@ spec:
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           args:
             - "-target=admin_api"
-            - "-config.file=/etc/cortex/cortex.yaml"
             - "-config.file=/etc/metrics-enterprise/metrics-enterprise.yaml"
             {{- if .Values.minio.enabled }}
             - -admin-client.storage.s3.endpoint={{ "metrics_enterprise.fullname" . }}-minio.{{ .Release.Namespace }}.svc.cluster.local:9000
@@ -75,7 +74,7 @@ spec:
               {{ toYaml .Values.admin_api.extraVolumeMounts | nindent 12}}
             {{- end }}
             - name: config
-              mountPath: /etc/cortex
+              mountPath: /etc/metrics-enterprise
             - name: storage
               mountPath: "/data"
               subPath: {{ .Values.admin_api.persistence.subPath }}
@@ -111,7 +110,7 @@ spec:
           {{- if .Values.useExternalConfig }}
             secretName: {{ .Values.externalConfigSecretName }}
           {{- else }}
-            secretName: {{ template "cortex.fullname" . }}
+            secretName: {{ template "metrics_enterprise.fullname" . }}
           {{- end }}
         {{- if .Values.admin_api.extraVolumes }}
         {{ toYaml .Values.admin_api.extraVolumes | nindent 8}}
