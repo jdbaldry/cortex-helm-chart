@@ -109,12 +109,6 @@ spec:
           args:
             - "-target=compactor"
             - "-config.file=/etc/metrics-enterprise/cortex.yaml"
-            {{- if .Values.memcached.enabled }}
-            - -store.chunks-cache.memcached.addresses=dns+{{ template "metrics_enterprise.fullname" . }}-memcached.{{ .Release.Namespace }}.svc.cluster.local:11211
-            {{- end }}
-            {{- if index .Values "memcached-index-write" "enabled" }}
-            - -store.index-cache-write.memcached.addresses=dns+{{ template "metrics_enterprise.fullname" . }}-memcached-index-write.{{ .Release.Namespace }}.svc.cluster.local:11211
-            {{- end }}
             {{- range $key, $value := .Values.compactor.extraArgs }}
             - "-{{ $key }}={{ $value }}"
             {{- end }}
