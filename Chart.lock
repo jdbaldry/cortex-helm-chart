@@ -8,5 +8,8 @@ dependencies:
 - name: memcached
   repository: https://kubernetes-charts.storage.googleapis.com/
   version: 3.2.3
-digest: sha256:15343a3a535fa858a532546a47dbb63e1379be1d4081f55b01de56db3d2b7617
-generated: "2020-07-02T10:49:04.929498-07:00"
+- name: minio
+  repository: https://helm.min.io/
+  version: 8.0.0
+digest: sha256:8bbccc6eae0060e1b6f9b9ddf684c4a3fc88dfe70ae56e21c0673c22a479adf9
+generated: "2020-11-02T17:28:40.099948505Z"
