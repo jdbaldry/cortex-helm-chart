@@ -18,7 +18,7 @@ spec:
       app: {{ template "metrics_enterprise.name" . }}-ingester
       release: {{ .Release.Name }}
   updateStrategy:
-    {{- toYaml .Values.ingester.statefulStrategy | nindent 4 }}          
+    {{- toYaml .Values.ingester.statefulStrategy | nindent 4 }}
   serviceName: {{ template "metrics_enterprise.fullname" . }}-ingester
   {{- if .Values.ingester.persistentVolume.enabled }}
   volumeClaimTemplates:

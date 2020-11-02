@@ -19,7 +19,7 @@ spec:
       app: {{ template "metrics_enterprise.name" . }}-compactor
       release: {{ .Release.Name }}
   updateStrategy:
-    {{- toYaml .Values.compactor.strategy | nindent 4 }}            
+    {{- toYaml .Values.compactor.strategy | nindent 4 }}
   serviceName: {{ template "metrics_enterprise.fullname" . }}-compactor
   {{- if .Values.compactor.persistentVolume.enabled }}
   volumeClaimTemplates:
@@ -127,7 +127,7 @@ spec:
             - name: storage
               mountPath: "/data"
               {{- if .Values.compactor.persistentVolume.subPath }}
-              subPath: {{ .Values.compactor.persistentVolume.subPath }}              
+              subPath: {{ .Values.compactor.persistentVolume.subPath }}
               {{- end }}
           ports:
             - name: http-metrics

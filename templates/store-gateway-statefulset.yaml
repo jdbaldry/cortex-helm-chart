@@ -18,7 +18,7 @@ spec:
       app: {{ template "metrics_enterprise.name" . }}-store-gateway
       release: {{ .Release.Name }}
   updateStrategy:
-    {{- toYaml .Values.store_gateway.strategy | nindent 4 }}      
+    {{- toYaml .Values.store_gateway.strategy | nindent 4 }}
   serviceName: {{ template "metrics_enterprise.fullname" . }}-store-gateway
   {{- if .Values.store_gateway.persistentVolume.enabled }}
   volumeClaimTemplates:
