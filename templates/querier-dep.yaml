@@ -60,14 +60,14 @@ spec:
             - "-target=querier"
             - "-config.file=/etc/metrics-enterprise/cortex.yaml"
             - "-querier.frontend-address={{ template "metrics_enterprise.fullname" . }}-query-frontend-headless.{{ .Release.Namespace }}.svc.cluster.local:{{ .Values.query_frontend.service.grpc_port}}"
-            {{- if (and .Values.memcached.enabled) (eq .Values.config.storage.engine "chunks") }}
+            {{- if and (.Values.memcached.enabled) (eq .Values.config.storage.engine "chunks") }}
             - "-store.chunks-cache.memcached.addresses=dns+{{ template "metrics_enterprise.fullname" . }}-memcached.{{ .Release.Namespace }}.svc.cluster.local:11211"
             {{- end }}
             {{- if and (index .Values "memcached-index-read" "enabled") (eq .Values.config.storage.engine "chunks") }}
             - "-store.index-cache-read.memcached.addresses=dns+{{ template "metrics_enterprise.fullname" . }}-memcached-index-read.{{ .Release.Namespace }}.svc.cluster.local:11211"
             {{- end }}
             {{- if .Values.minio.enabled }}
-            - -blocks-storage.s3.endpoint={{ "metrics_enterprise.fullname" . }}-minio.{{ .Release.Namespace }}.svc.cluster.local:9000
+            - -blocks-storage.s3.endpoint={{ template "metrics_enterprise.fullname" . }}-minio.{{ .Release.Namespace }}.svc.cluster.local:9000
             - -blocks-storage.s3.bucket-name=metrics-enterprise-tsdb
             - -blocks-storage.s3.access-key-id=metrics-enterprise
             - -blocks-storage.s3.secret-access-key=supersecret

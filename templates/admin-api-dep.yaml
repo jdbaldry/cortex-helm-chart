@@ -59,6 +59,7 @@ spec:
           args:
             - "-target=admin_api"
             - "-config.file=/etc/cortex/cortex.yaml"
+            - "-config.file=/etc/metrics-enterprise/metrics-enterprise.yaml"
             {{- range $key, $value := .Values.admin_api.extraArgs }}
             - "-{{ $key }}={{ $value }}"
             {{- end }}
