@@ -40,6 +40,10 @@ externalConfigVersion: '0'
 config:
   auth_enabled: false
 
+  admin_client:
+    storage:
+      type: s3
+
   ingester:
     max_transfer_retries: 0
     lifecycler:
@@ -1273,3 +1277,4 @@ minio:
   secretKey: supersecret
   buckets:
     - name: metrics-enterprise-tsdb
+    - name: metrics-enterprise-admin

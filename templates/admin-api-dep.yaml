@@ -60,6 +60,13 @@ spec:
             - "-target=admin_api"
             - "-config.file=/etc/cortex/cortex.yaml"
             - "-config.file=/etc/metrics-enterprise/metrics-enterprise.yaml"
+            {{- if .Values.minio.enabled }}
+            - -admin-client.storage.s3.endpoint={{ "metrics_enterprise.fullname" . }}-minio.{{ .Release.Namespace }}.svc.cluster.local:9000
+            - -admin-client.storage.s3.bucket-name=metrics-enterprise-tsdb
+            - -admin-client.storage.s3.access-key-id=metrics-enterprise
+            - -admin-client.storage.s3.secret-access-key=supersecret
+            - -admin-client.storage.s3.insecure=true
+            {{- end }}
             {{- range $key, $value := .Values.admin_api.extraArgs }}
             - "-{{ $key }}={{ $value }}"
             {{- end }}
