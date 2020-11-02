@@ -1214,7 +1214,7 @@ compactor:
   extraPorts: []
   env: []
 
-# chunk caching
+# Blocks/chunks chunk cache.
 memcached:
   enabled: false
   replicaCount: 2
@@ -1248,9 +1248,9 @@ memcached:
   #             values:
   #             - metrics-enterprise-memcached
 
-# index read caching
+# Blocks/chunks index read cache.
 memcached-index-read:
-  enabled: false
+  enabled: true
   replicaCount: 2
   #pdbMinAvailable: 1
   #image: memcached:1.5.7-alpine
@@ -1283,40 +1283,26 @@ memcached-index-read:
   #             values:
   #             - metrics-enterprise-memcached
 
-# index write caching
-memcached-index-write:
-  enabled: false
+# Blocks metadata cache.
+# https://cortexmetrics.io/docs/blocks-storage/querier/#metadata-cache.
+memcached-metadata:
+  enabled: true
   replicaCount: 2
-  #dpdbMinAvailable: 1
-  #image: memcached:1.5.7-alpine
   memcached:
-    maxItemMemory: 3840
+    maxIteMmemory: 1
     extraArgs:
+      - -m 512
       - -I 32m
     threads: 32
   resources:
     requests:
-      memory: 1Gi
+      memory: 540Mi # A little over the memcached configured limit (-m).
       cpu: 10m
     limits:
-      memory: 4Gi
+      memory: 810Mi # 1.5 * memory request
       cpu: 1
   metrics:
     enabled: true
-  #tolerations: []
-  # - key: "dedicated"
-  #   operator: "Equal"
-  #   value: "metrics-enterprise-memcached"
-  #   effect: "NoSchedule"
-  # affinity: {}
-  #   nodeAffinity:
-  #     requiredDuringSchedulingIgnoredDuringExecution:
-  #         nodeSelectorTerms:
-  #         - matchExpressions:
-  #           - key: dedicated
-  #             operator: In
-  #             values:
-  #             - metrics-enterprise-memcached
 
 configsdb_postgresql:
   enabled: false
