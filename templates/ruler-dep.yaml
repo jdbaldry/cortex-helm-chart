@@ -66,7 +66,7 @@ spec:
             {{- else }}
             - "-ruler.alertmanager-url=http://{{ template "metrics_enterprise.fullname" . }}-alertmanager.{{ .Release.Namespace }}.svc.cluster.local:{{ .Values.config.server.http_listen_port }}/api/prom/alertmanager/"
             {{- end }}
-            {{- if .Values.memcached.enabled }}
+            {{- if and (.Values.memcached.enabled) (eq .Values.config.storage.engine "chunks") }}
             - -store.chunks-cache.memcached.addresses=dns+{{ template "metrics_enterprise.fullname" . }}-memcached.{{ .Release.Namespace }}.svc.cluster.local:11211
             - -store.chunks-cache.memcached.timeout=100ms
             {{- end }}
