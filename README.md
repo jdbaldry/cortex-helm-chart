@@ -46,12 +46,6 @@ have varying resource requirements. Please make sure that you have sufficient
 resources (CPU/memory) available in your cluster before installing Grafana Metrics Enterprise Helm
 chart.
 
-Additionally, the default chart installation expects Grafana Metrics Enterprise pods to be deployed
-on nodes with taints "dedicated=metrics-enterprise" and memcached pods on nodes with taints
-"dedicated=metrics-enterprise-memcached". Additonally, Grafana Metrics Enterprise pods have node affinity for
-nodes which match the expression "dedicated=metrics-enterprise" and mamcached pods have
-affinity for "dedicated=metrics-enterprise-memcached" nodes.
-
 ## Upgrades
 
 To upgrade Grafana Metrics Enterprise use the following command:
