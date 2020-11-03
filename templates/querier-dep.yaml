@@ -60,6 +60,9 @@ spec:
             - "-target=querier"
             - "-config.file=/etc/metrics-enterprise/metrics-enterprise.yaml"
             - "-querier.frontend-address={{ template "metrics_enterprise.fullname" . }}-query-frontend-headless.{{ .Release.Namespace }}.svc.cluster.local:{{ .Values.query_frontend.service.grpc_port}}"
+            {{- if .Values.consul.enabled }}
+            - -consul.hostname={{ .Release.Name }}-consul-server.{{ .Release.Namespace }}.svc.cluster.local:8500
+            {{- end }}
             {{- if and (.Values.memcached.enabled) (eq .Values.config.storage.engine "chunks") }}
             - "-store.chunks-cache.memcached.addresses=dns+{{ template "metrics_enterprise.fullname" . }}-memcached.{{ .Release.Namespace }}.svc.cluster.local:11211"
             {{- end }}
