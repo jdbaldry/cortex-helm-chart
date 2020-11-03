@@ -1174,7 +1174,7 @@ compactor:
 
 # Blocks/chunks chunk cache.
 memcached:
-  enabled: false
+  enabled: true
   replicaCount: 2
   pdbMinAvailable: 1
   memcached:
