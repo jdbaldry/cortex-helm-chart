@@ -82,6 +82,8 @@ config:
   # This configures how the store-gateway synchronizes blocks stored in the bucket. It uses Minio by default for getting started but this should be changed for production deployments.
   blocks_storage:
     backend: s3
+    bucket_store:
+      sync_dir: /data/tsdb-sync
 
   distributor:
     shard_by_all_labels: true
