@@ -1,0 +1,62 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  labels:
+    app: {{ template "metrics_enterprise.name" . }}-bootstrap
+    chart: {{ template "metrics_enterprise.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+  name: {{ template "metrics_enterprise.fullname" . }}-bootstrap
+  namespace: {{ .Release.Namespace }}
+spec:
+  backoffLimit: 6
+  completions: 1
+  parallelism: 1
+  selector:
+  template:
+    metadata:
+      labels:
+        app: {{ template "metrics_enterprise.name" . }}-bootstrap
+        name: {{ template "metrics_enterprise.name" . }}-bootstrap
+        target: bootstrap
+        release: {{ .Release.Name }}
+    spec:
+      containers:
+      - args:
+          - "-target=bootstrap"
+          - "-config.file=/etc/metrics-enterprise/metrics-enterprise.yaml"
+          {{- if .Values.minio.enabled }}
+          - -admin.client.backend-type=s3
+          - -admin.client.s3.endpoint={{ .Release.Name }}-minio.{{ .Release.Namespace }}.svc.cluster.local:9000
+          - -admin.client.s3.bucket-name=metrics-enterprise-tsdb
+          - -admin.client.s3.access-key-id=metrics-enterprise
+          - -admin.client.s3.secret-access-key=supersecret
+          - -admin.client.s3.insecure=true
+          {{- end }}
+        {{- range $key, $value := .Values.bootstrap.extraArgs }}
+          - "-{{ $key }}={{ $value }}"
+        {{- end }}
+          - -bootstrap.license.path=/license/license.jwt
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+        name: {{ .Chart.Name }}
+        volumeMounts:
+          - name: config
+            mountPath: /etc/metrics-enterprise
+          - name: license
+            mountPath: /license
+      restartPolicy: OnFailure
+      imagePullSecrets:
+      {{- range .Values.image.pullSecrets }}
+        - name: {{ . }}
+      {{- end }}
+      volumes:
+        - name: config
+          secret:
+{{- if .Values.useExternalConfig }}
+            secretName: {{ .Values.externalConfigSecretName }}
+{{- else }}
+            secretName: {{ template "metrics_enterprise.fullname" . }}
+{{- end }}
+        - name: license
+          secret:
+            secretName: {{ template "metrics_enterprise.fullname" . }}-license
