@@ -67,7 +67,13 @@ spec:
             - "-store.index-cache-read.memcached.addresses=dns+{{ template "metrics_enterprise.fullname" . }}-memcached-index-read.{{ .Release.Namespace }}.svc.cluster.local:11211"
             {{- end }}
             {{- if .Values.minio.enabled }}
-            - -blocks-storage.s3.endpoint={{ template "metrics_enterprise.fullname" . }}-minio.{{ .Release.Namespace }}.svc.cluster.local:9000
+            - -admin.client.backend-type=s3
+            - -admin.client.s3.endpoint={{ .Release.Name }}-minio.{{ .Release.Namespace }}.svc.cluster.local:9000
+            - -admin.client.s3.bucket-name=metrics-enterprise-tsdb
+            - -admin.client.s3.access-key-id=metrics-enterprise
+            - -admin.client.s3.secret-access-key=supersecret
+            - -admin.client.s3.insecure=true
+            - -blocks-storage.s3.endpoint={{ .Release.Name }}-minio.{{ .Release.Namespace }}.svc.cluster.local:9000
             - -blocks-storage.s3.bucket-name=metrics-enterprise-tsdb
             - -blocks-storage.s3.access-key-id=metrics-enterprise
             - -blocks-storage.s3.secret-access-key=supersecret
