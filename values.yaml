@@ -44,6 +44,11 @@ config:
     storage:
       type: s3
 
+  license:
+    # Only the bootstrap target should look for a license file on the filesystem. For that job, this value is overriden by the flag `-bootstrap.license.path`.
+    path: ""    # All components should exit if they do not find a license (in a file for the bootstrap job, or in the admin bucket for every other service).
+    required: true
+
   ingester:
     max_transfer_retries: 0
     lifecycler:
