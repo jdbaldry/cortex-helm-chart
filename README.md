@@ -6,7 +6,7 @@ Helm chart for deploying [Grafana Metrics Enterprise](https://grafana.com/produc
 
 ## Grafana Metrics Enterprise license file
 
-In order to use the enterprise features of Grafana Metrics Enterprise, you need to provide a license file to a bootsrap job. For more information, see the [Getting Started](https://grafana.com/docs/metrics-enterprise/latest/getting-started/#get-a-license) documentation.
+In order to use the enterprise features of Grafana Metrics Enterprise, you need to provide a license file to a bootstrap job. For more information, see the [Getting Started](https://grafana.com/docs/metrics-enterprise/latest/getting-started/#get-a-license) documentation.
 
 This Helm chart expects the license to be embedded in a Kubernetes secret with the name `{{ template "metrics_enterprise.fullname" . }}-license`.
 
