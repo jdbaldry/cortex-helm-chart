@@ -409,7 +409,7 @@ ingester:
     ## If true, use a statefulset instead of a deployment for pod management.
     ## This is useful when using WAL
     ##
-    enabled: false
+    enabled: true
 
   service:
     annotations: {}
