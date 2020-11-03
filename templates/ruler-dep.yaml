@@ -70,6 +70,9 @@ spec:
             - -store.chunks-cache.memcached.addresses=dns+{{ template "metrics_enterprise.fullname" . }}-memcached.{{ .Release.Namespace }}.svc.cluster.local:11211
             - -store.chunks-cache.memcached.timeout=100ms
             {{- end }}
+            {{- if eq .Values.config.storage.engine "blocks" }}
+            - -querier.store-gateway-addresses=dns+{{ template "metrics_enterprise.fullname" . }}-store-gateway.{{ .Release.Namespace }}.svc.cluster.local:{{ .Values.config.server.http_listen_port }}
+            {{- end }}
           {{- range $key, $value := .Values.ruler.extraArgs }}
             - "-{{ $key }}={{ $value }}"
           {{- end }}
