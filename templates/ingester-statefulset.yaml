@@ -108,6 +108,9 @@ spec:
           args:
             - "-target=ingester"
             - "-config.file=/etc/metrics-enterprise/metrics-enterprise.yaml"
+            {{- if .Values.consul.enabled }}
+            - -consul.hostname={{ .Release.Name }}-consul-server.{{ .Release.Namespace }}.svc.cluster.local:8500
+            {{- end }}
             {{- if .Values.minio.enabled }}
             - -admin.client.backend-type=s3
             - -admin.client.s3.endpoint={{ .Release.Name }}-minio.{{ .Release.Namespace }}.svc.cluster.local:9000

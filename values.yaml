@@ -56,7 +56,6 @@ config:
           store: consul
           prefix: 'collectors/'
           consul:
-            host: 'consul:8500'
             http_client_timeout: '20s'
             consistent_reads: true
   limits:
@@ -1278,3 +1277,6 @@ minio:
   buckets:
     - name: metrics-enterprise-tsdb
     - name: metrics-enterprise-admin
+
+consul:
+  enabled: true
