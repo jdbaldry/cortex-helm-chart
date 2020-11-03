@@ -13,7 +13,7 @@ This Helm chart expects the license to be embedded in a Kubernetes secret with t
 To create the secret from a local `license.jwt` file:
 
 ```console
-$ kubectl create secret generic <cluster name>-metrics-enterprise-license- --from-file=license.jwt --dry-run=client -o yaml | kubectl apply -f -
+$ kubectl create secret generic <cluster name>-metrics-enterprise-license --from-file=license.jwt --dry-run=client -o yaml | kubectl apply -f -
 ```
 
 ### Key-Value store
