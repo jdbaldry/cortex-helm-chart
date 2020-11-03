@@ -43,7 +43,7 @@ data:
         }
 
         # Admin API Config
-        location ~ /admin/.*
+        location ~ /admin/.* {
           proxy_pass      http://{{ template "metrics_enterprise.fullname" . }}-admin-api.{{ .Release.Namespace }}.svc.cluster.local:{{ .Values.config.server.http_listen_port }}$request_uri;
         }
 
