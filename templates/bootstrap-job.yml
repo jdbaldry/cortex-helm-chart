@@ -30,10 +30,6 @@ spec:
         {{- end }}
           - -bootstrap.license.path=/secrets/license.jwt
         image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
-        imagePullSecrets:
-        {{- range .Values.image.pullSecrets }}
-          - name: {{ . }}
-        {{- end }}
         name: {{ .Chart.Name }}
         volumeMounts:
           - name: config
@@ -42,6 +38,10 @@ spec:
             mountPath: /secrets
             subPath: license.jwt
       restartPolicy: OnFailure
+      imagePullSecrets:
+      {{- range .Values.image.pullSecrets }}
+        - name: {{ . }}
+      {{- end }}
       volumes:
         - name: config
           secret:
