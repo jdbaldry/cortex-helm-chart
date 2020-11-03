@@ -60,6 +60,36 @@ $ helm upgrade <cluster name>  metrics-enterprise -f <values.yaml file>
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
+| admin\_api.affinity | object | `{}` |  |
+| admin\_api.annotations | object | `{}` |  |
+| admin\_api.extraArgs | list | `{}` |  |
+| admin\_api.extraContainers | list | `[]` |  |
+| admin\_api.extraVolumes | list | `[]` |  |
+| admin\_api.initContainers | list | `[]` |  |
+| admin\_api.livenessProbe.httpGet.path | string | `"/ready"` |  |
+| admin\_api.livenessProbe.httpGet.port | string | `"http-metrics"` |  |
+| admin\_api.livenessProbe.initialDelaySeconds | int | `45` |  |
+| admin\_api.nodeSelector | object | `{}` |  |
+| admin\_api.persistence.subPath | string | `nil` |  |
+| admin\_api.podAnnotations."prometheus.io/port" | string | `"http-metrics"` |  |
+| admin\_api.podAnnotations."prometheus.io/scrape" | string | `"true"` |  |
+| admin\_api.podLabels | object | {} |  |
+| admin\_api.readinessProbe.httpGet.path | string | `"/ready"` |  |
+| admin\_api.readinessProbe.httpGet.port | string | `"http-metrics"` |  |
+| admin\_api.readinessProbe.initialDelaySeconds | int | `45` |  |
+| admin\_api.replicas | int | `1` |  |
+| admin\_api.resources.limits.cpu | string | `"200m"` |  |
+| admin\_api.resources.limits.memory | string | `"256Mi"` |  |
+| admin\_api.resources.requests.cpu | string | `"10m"` |  |
+| admin\_api.resources.requests.memory | string | `"32Mi"` |  |
+| admin\_api.securityContext | object | `{}` |  |
+| admin\_api.service.annotations | object | `{}` |  |
+| admin\_api.service.labels | object | `{}` |  |
+| admin\_api.strategy.type | string | `"RollingUpdate"` |  |
+| admin\_api.strategy.rollingUpdate.maxSurge | int | `0` |  |
+| admin\_api.strategy.rollingUpdate.maxUnavailable | int | `1` |  |
+| admin\_api.terminationGracePeriodSeconds | int | `60` |  |
+| admin\_api.tolerations | list | `[]` |  |
 | alertmanager.affinity | object | `{}` |  |
 | alertmanager.annotations | object | `{}` |  |
 | alertmanager.env | list | `[]` |  |
