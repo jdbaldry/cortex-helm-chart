@@ -1,3 +1,10 @@
+# Bootstrapping is required to run Grafana Metrics Enterprise with enterprise features.
+# Without bootstrapping, the cluster will run as a standard Cortex cluster.
+# The README.md file documents the bootstrapping procedure.
+bootstrap: false
+bootstrapJob:
+  extraArgs: []
+
 ## Container image settings.
 ## Since the image is unique for all microservices, so are image settings.
 
@@ -46,8 +53,7 @@ config:
 
   license:
     # Only the bootstrap target should look for a license file on the filesystem. For that job, this value is overriden by the flag `-bootstrap.license.path`.
-    path: ""    # All components should exit if they do not find a license (in a file for the bootstrap job, or in the admin bucket for every other service).
-    required: true
+    path: ""
 
   ingester:
     max_transfer_retries: 0

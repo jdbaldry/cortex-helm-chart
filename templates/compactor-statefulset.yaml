@@ -1,3 +1,4 @@
+{{- if not .Values.bootstrap -}}
 {{- if eq .Values.config.storage.engine "blocks" -}}
 {{- if .Values.compactor.enabled -}}
 apiVersion: apps/v1
@@ -152,5 +153,6 @@ spec:
             {{- if .Values.compactor.env }}
               {{- toYaml .Values.compactor.env | nindent 12 }}
             {{- end }}
+{{- end -}}
 {{- end -}}
 {{- end -}}

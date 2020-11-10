@@ -1,3 +1,4 @@
+{{- if not .Values.bootstrap -}}
 {{- if eq .Values.config.storage.engine "blocks" -}}
 apiVersion: apps/v1
 kind: StatefulSet
@@ -166,4 +167,5 @@ spec:
             {{- if .Values.store_gateway.env }}
               {{- toYaml .Values.store_gateway.env | nindent 12 }}
             {{- end }}
+{{- end -}}
 {{- end -}}

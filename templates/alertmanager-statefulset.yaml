@@ -1,3 +1,4 @@
+{{- if not .Values.bootstrap -}}
 {{- if .Values.alertmanager.statefulSet.enabled -}}
 {{- $clusterPort := regexReplaceAll ".+[:]" (default "0.0.0.0:9094" .Values.config.alertmanager.cluster_bind_address) "" -}}
 apiVersion: apps/v1
@@ -150,4 +151,5 @@ spec:
             {{- if .Values.alertmanager.env }}
               {{- toYaml .Values.alertmanager.env | nindent 12 }}
             {{- end }}
+{{- end -}}
 {{- end -}}

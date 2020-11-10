@@ -4,9 +4,10 @@ Helm chart for deploying [Grafana Metrics Enterprise](https://grafana.com/produc
 
 ## Dependencies
 
-## Grafana Metrics Enterprise license file
+## Grafana Metrics Enterprise license file bootstrapping
 
-In order to use the enterprise features of Grafana Metrics Enterprise, you need to provide a license file to a bootstrap job. For more information, see the [Getting Started](https://grafana.com/docs/metrics-enterprise/latest/getting-started/#get-a-license) documentation.
+In order to use the enterprise features of Grafana Metrics Enterprise, you need to provide a license file to a bootstrap job.
+For more information, see the [Getting Started](https://grafana.com/docs/metrics-enterprise/latest/getting-started/#get-a-license) documentation.
 
 This Helm chart expects the license to be embedded in a Kubernetes secret with the name `{{ template "metrics_enterprise.fullname" . }}-license`.
 
@@ -22,23 +23,30 @@ Grafana Metrics Enterprise requires an externally provided key-value store, such
 
 Both services can be installed alongside Grafana Metrics Enterprise, for example using helm charts available [here](https://github.com/bitnami/charts/tree/master/bitnami/etcd) and [here](https://github.com/helm/charts/tree/master/stable/consul).
 
+For convenient first time set up, consul is deployed in the default configuration.
+
 ### Storage
 
-Grafana Metrics Enterprise requires a storage backend to store metrics and indexes.
-See [cortex documentation](https://cortexmetrics.io/docs/) for details on storage types and documentation
+Grafana Metrics Enterprise requires an object storage backend to store metrics and indexes.
+
+The default chart values will deploy [Minio](https://min.io) for initial set up. Production deployments should use a separately deployed object store.
+See [cortex documentation](https://cortexmetrics.io/docs/) for details on storage types and documentation.
 
 ## Installation
 
-Grafana Metrics Enterprise can be installed in your Kubernetes cluster using the following command:
+To deploy the default configuration with enterprise features:
+
+```console
+$ # Run bootstrapping job
+$ helm install <cluster name> metrics-enterprise --set bootstrap=true
+$ # Deploy cluster components
+$ helm upgrade <cluster name> metrics-enterprise --set bootstrap=false
+```
+
+Or if you do not wish to run with enterprise features:
 
 ```console
 $ helm install <cluster name> metrics-enterprise
-```
-
-or if you have custom options or values you want to override:
-
-```console
-$ helm install <cluster name> metrics-enterprise -f <values.yaml file>
 ```
 
 As part of this chart many different pods and services are installed which all
@@ -137,7 +145,8 @@ $ helm upgrade <cluster name>  metrics-enterprise -f <values.yaml file>
 | alertmanager.strategy.type | string | `"RollingUpdate"` |  |
 | alertmanager.terminationGracePeriodSeconds | int | `60` |  |
 | alertmanager.tolerations | list | `[]` |  |
-| bootstrap.extraArgs | object | {} |  |
+| bootstrap | bool | `false` | Perform bootstrapping process instead of deploying cluster |
+| bootstrapJob.extraArgs | object | {} |  |
 | compactor.affinity.podAntiAffinity.preferredDuringSchedulingIgnoredDuringExecution[0].podAffinityTerm.labelSelector.matchExpressions[0].key | string | `"target"` |  |
 | compactor.affinity.podAntiAffinity.preferredDuringSchedulingIgnoredDuringExecution[0].podAffinityTerm.labelSelector.matchExpressions[0].operator | string | `"In"` |  |
 | compactor.affinity.podAntiAffinity.preferredDuringSchedulingIgnoredDuringExecution[0].podAffinityTerm.labelSelector.matchExpressions[0].values[0] | string | `"compactor"` |  |

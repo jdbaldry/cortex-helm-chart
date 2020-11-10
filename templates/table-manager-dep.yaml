@@ -1,3 +1,4 @@
+{{- if not .Values.bootstrap -}}
 {{- if ne .Values.config.storage.engine "blocks" -}}
 apiVersion: apps/v1
 kind: Deployment
@@ -111,4 +112,5 @@ spec:
 {{- end }}
         - name: storage
           emptyDir: {}
+{{- end -}}
 {{- end -}}

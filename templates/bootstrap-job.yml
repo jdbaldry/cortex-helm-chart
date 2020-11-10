@@ -1,3 +1,4 @@
+{{- if .Values.bootstrap -}}
 apiVersion: batch/v1
 kind: Job
 metadata:
@@ -33,7 +34,7 @@ spec:
           - -admin.client.s3.secret-access-key=supersecret
           - -admin.client.s3.insecure=true
           {{- end }}
-        {{- range $key, $value := .Values.bootstrap.extraArgs }}
+        {{- range $key, $value := .Values.bootstrapJob.extraArgs }}
           - "-{{ $key }}={{ $value }}"
         {{- end }}
           - -bootstrap.license.path=/license/license.jwt
@@ -60,3 +61,4 @@ spec:
         - name: license
           secret:
             secretName: {{ template "metrics_enterprise.fullname" . }}-license
+{{- end -}}

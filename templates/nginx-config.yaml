@@ -1,3 +1,4 @@
+{{- if not .Values.bootstrap -}}
 {{- if .Values.nginx.enabled }}
 kind: ConfigMap
 apiVersion: v1
@@ -94,3 +95,4 @@ data:
       }
     }
 {{- end }}
+{{- end -}}

@@ -1,3 +1,4 @@
+{{- if not .Values.bootstrap -}}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -140,3 +141,4 @@ spec:
 {{- end }}
         - name: storage
           emptyDir: {}
+{{- end -}}
