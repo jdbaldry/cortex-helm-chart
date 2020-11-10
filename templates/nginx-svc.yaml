@@ -1,3 +1,4 @@
+{{- if not .Values.bootstrap -}}
 {{- if .Values.nginx.enabled }}
 apiVersion: v1
 kind: Service
@@ -25,3 +26,4 @@ spec:
     app: {{ template "metrics_enterprise.name" . }}-nginx
     release: {{ .Release.Name }}
 {{- end }}
+{{- end -}}

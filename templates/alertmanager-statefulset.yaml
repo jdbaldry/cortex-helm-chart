@@ -1,3 +1,4 @@
+{{- if not .Values.bootstrap -}}
 {{- if .Values.alertmanager.statefulSet.enabled -}}
 {{- $clusterPort := regexReplaceAll ".+[:]" (default "0.0.0.0:9094" .Values.config.alertmanager.cluster_bind_address) "" -}}
 apiVersion: apps/v1
@@ -108,7 +109,7 @@ spec:
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           args:
             - "-target=alertmanager"
-            - "-config.file=/etc/metrics-enterprise/cortex.yaml"
+            - "-config.file=/etc/metrics-enterprise/metrics-enterprise.yaml"
             - "-alertmanager.configs.url=http://{{ template "metrics_enterprise.fullname" . }}-configs.{{ .Release.Namespace }}.svc.cluster.local:{{ .Values.config.server.http_listen_port }}"
             {{- if gt (.Values.alertmanager.replicas | int) 1 }}
             {{- range $n := until (.Values.alertmanager.replicas |int ) }}
@@ -150,4 +151,5 @@ spec:
             {{- if .Values.alertmanager.env }}
               {{- toYaml .Values.alertmanager.env | nindent 12 }}
             {{- end }}
+{{- end -}}
 {{- end -}}

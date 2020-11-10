@@ -1,3 +1,4 @@
+{{- if not .Values.bootstrap -}}
 {{- if eq .Values.config.storage.engine "blocks" -}}
 apiVersion: v1
 kind: Service
@@ -29,4 +30,5 @@ spec:
   selector:
     app: {{ template "metrics_enterprise.name" . }}-store-gateway
     release: {{ .Release.Name }}
+{{- end -}}
 {{- end -}}

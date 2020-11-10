@@ -1,3 +1,4 @@
+{{- if not .Values.bootstrap -}}
 {{- if .Values.podDisruptionBudget -}}
 apiVersion: policy/v1beta1
 kind: PodDisruptionBudget
@@ -14,4 +15,5 @@ spec:
     matchLabels:
       app: {{ template "metrics_enterprise.name" . }}
 {{ toYaml .Values.podDisruptionBudget | indent 2 }}
+{{- end -}}
 {{- end -}}

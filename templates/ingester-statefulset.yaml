@@ -1,3 +1,4 @@
+{{- if not .Values.bootstrap -}}
 {{- if .Values.ingester.statefulSet.enabled -}}
 apiVersion: apps/v1
 kind: StatefulSet
@@ -18,7 +19,7 @@ spec:
       app: {{ template "metrics_enterprise.name" . }}-ingester
       release: {{ .Release.Name }}
   updateStrategy:
-    {{- toYaml .Values.ingester.statefulStrategy | nindent 4 }}          
+    {{- toYaml .Values.ingester.statefulStrategy | nindent 4 }}
   serviceName: {{ template "metrics_enterprise.fullname" . }}-ingester
   {{- if .Values.ingester.persistentVolume.enabled }}
   volumeClaimTemplates:
@@ -107,11 +108,27 @@ spec:
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           args:
             - "-target=ingester"
-            - "-config.file=/etc/metrics-enterprise/cortex.yaml"
-            {{- if .Values.memcached.enabled }}
+            - "-config.file=/etc/metrics-enterprise/metrics-enterprise.yaml"
+            {{- if .Values.consul.enabled }}
+            - -consul.hostname={{ .Release.Name }}-consul-server.{{ .Release.Namespace }}.svc.cluster.local:8500
+            {{- end }}
+            {{- if .Values.minio.enabled }}
+            - -admin.client.backend-type=s3
+            - -admin.client.s3.endpoint={{ .Release.Name }}-minio.{{ .Release.Namespace }}.svc.cluster.local:9000
+            - -admin.client.s3.bucket-name=metrics-enterprise-tsdb
+            - -admin.client.s3.access-key-id=metrics-enterprise
+            - -admin.client.s3.secret-access-key=supersecret
+            - -admin.client.s3.insecure=true
+            - -blocks-storage.s3.endpoint={{ .Release.Name }}-minio.{{ .Release.Namespace }}.svc.cluster.local:9000
+            - -blocks-storage.s3.bucket-name=metrics-enterprise-tsdb
+            - -blocks-storage.s3.access-key-id=metrics-enterprise
+            - -blocks-storage.s3.secret-access-key=supersecret
+            - -blocks-storage.s3.insecure=true
+            {{- end }}
+            {{- if and (.Values.memcached.enabled) (eq .Values.config.storage.engine "chunks") }}
             - -store.chunks-cache.memcached.addresses=dns+{{ template "metrics_enterprise.fullname" . }}-memcached.{{ .Release.Namespace }}.svc.cluster.local:11211
             {{- end }}
-            {{- if index .Values "memcached-index-write" "enabled" }}
+            {{- if and (index .Values "memcached-index-write" "enabled") (eq .Values.config.storage.engine "chunks") }}
             - -store.index-cache-write.memcached.addresses=dns+{{ template "metrics_enterprise.fullname" . }}-memcached-index-write.{{ .Release.Namespace }}.svc.cluster.local:11211
             {{- end }}
             {{- range $key, $value := .Values.ingester.extraArgs }}
@@ -149,4 +166,5 @@ spec:
             {{- if .Values.ingester.env }}
               {{- toYaml .Values.ingester.env | nindent 12 }}
             {{- end }}
+{{- end -}}
 {{- end -}}

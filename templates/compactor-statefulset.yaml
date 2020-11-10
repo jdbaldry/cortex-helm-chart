@@ -1,3 +1,4 @@
+{{- if not .Values.bootstrap -}}
 {{- if eq .Values.config.storage.engine "blocks" -}}
 {{- if .Values.compactor.enabled -}}
 apiVersion: apps/v1
@@ -19,7 +20,7 @@ spec:
       app: {{ template "metrics_enterprise.name" . }}-compactor
       release: {{ .Release.Name }}
   updateStrategy:
-    {{- toYaml .Values.compactor.strategy | nindent 4 }}            
+    {{- toYaml .Values.compactor.strategy | nindent 4 }}
   serviceName: {{ template "metrics_enterprise.fullname" . }}-compactor
   {{- if .Values.compactor.persistentVolume.enabled }}
   volumeClaimTemplates:
@@ -108,12 +109,19 @@ spec:
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           args:
             - "-target=compactor"
-            - "-config.file=/etc/metrics-enterprise/cortex.yaml"
-            {{- if .Values.memcached.enabled }}
-            - -store.chunks-cache.memcached.addresses=dns+{{ template "metrics_enterprise.fullname" . }}-memcached.{{ .Release.Namespace }}.svc.cluster.local:11211
-            {{- end }}
-            {{- if index .Values "memcached-index-write" "enabled" }}
-            - -store.index-cache-write.memcached.addresses=dns+{{ template "metrics_enterprise.fullname" . }}-memcached-index-write.{{ .Release.Namespace }}.svc.cluster.local:11211
+            - "-config.file=/etc/metrics-enterprise/metrics-enterprise.yaml"
+            {{- if .Values.minio.enabled }}
+            - -admin.client.backend-type=s3
+            - -admin.client.s3.endpoint={{ .Release.Name }}-minio.{{ .Release.Namespace }}.svc.cluster.local:9000
+            - -admin.client.s3.bucket-name=metrics-enterprise-tsdb
+            - -admin.client.s3.access-key-id=metrics-enterprise
+            - -admin.client.s3.secret-access-key=supersecret
+            - -admin.client.s3.insecure=true
+            - -blocks-storage.s3.endpoint={{ .Release.Name }}-minio.{{ .Release.Namespace }}.svc.cluster.local:9000
+            - -blocks-storage.s3.bucket-name=metrics-enterprise-tsdb
+            - -blocks-storage.s3.access-key-id=metrics-enterprise
+            - -blocks-storage.s3.secret-access-key=supersecret
+            - -blocks-storage.s3.insecure=true
             {{- end }}
             {{- range $key, $value := .Values.compactor.extraArgs }}
             - "-{{ $key }}={{ $value }}"
@@ -127,7 +135,7 @@ spec:
             - name: storage
               mountPath: "/data"
               {{- if .Values.compactor.persistentVolume.subPath }}
-              subPath: {{ .Values.compactor.persistentVolume.subPath }}              
+              subPath: {{ .Values.compactor.persistentVolume.subPath }}
               {{- end }}
           ports:
             - name: http-metrics
@@ -145,5 +153,6 @@ spec:
             {{- if .Values.compactor.env }}
               {{- toYaml .Values.compactor.env | nindent 12 }}
             {{- end }}
+{{- end -}}
 {{- end -}}
 {{- end -}}

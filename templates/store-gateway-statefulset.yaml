@@ -1,3 +1,4 @@
+{{- if not .Values.bootstrap -}}
 {{- if eq .Values.config.storage.engine "blocks" -}}
 apiVersion: apps/v1
 kind: StatefulSet
@@ -18,7 +19,7 @@ spec:
       app: {{ template "metrics_enterprise.name" . }}-store-gateway
       release: {{ .Release.Name }}
   updateStrategy:
-    {{- toYaml .Values.store_gateway.strategy | nindent 4 }}      
+    {{- toYaml .Values.store_gateway.strategy | nindent 4 }}
   serviceName: {{ template "metrics_enterprise.fullname" . }}-store-gateway
   {{- if .Values.store_gateway.persistentVolume.enabled }}
   volumeClaimTemplates:
@@ -107,12 +108,31 @@ spec:
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           args:
             - "-target=store-gateway"
-            - "-config.file=/etc/metrics-enterprise/cortex.yaml"
-            {{- if .Values.memcached.enabled }}
-            - -store.chunks-cache.memcached.addresses=dns+{{ template "metrics_enterprise.fullname" . }}-memcached.{{ .Release.Namespace }}.svc.cluster.local:11211
+            - "-config.file=/etc/metrics-enterprise/metrics-enterprise.yaml"
+            {{- if .Values.minio.enabled }}
+            - -admin.client.backend-type=s3
+            - -admin.client.s3.endpoint={{ .Release.Name }}-minio.{{ .Release.Namespace }}.svc.cluster.local:9000
+            - -admin.client.s3.bucket-name=metrics-enterprise-tsdb
+            - -admin.client.s3.access-key-id=metrics-enterprise
+            - -admin.client.s3.secret-access-key=supersecret
+            - -admin.client.s3.insecure=true
+            - -blocks-storage.s3.endpoint={{ .Release.Name }}-minio.{{ .Release.Namespace }}.svc.cluster.local:9000
+            - -blocks-storage.s3.bucket-name=metrics-enterprise-tsdb
+            - -blocks-storage.s3.access-key-id=metrics-enterprise
+            - -blocks-storage.s3.secret-access-key=supersecret
+            - -blocks-storage.s3.insecure=true
             {{- end }}
-            {{- if index .Values "memcached-index-write" "enabled" }}
-            - -store.index-cache-write.memcached.addresses=dns+{{ template "metrics_enterprise.fullname" . }}-memcached-index-write.{{ .Release.Namespace }}.svc.cluster.local:11211
+            {{- if .Values.memcached.enabled }}
+            - -blocks-storage.bucket-store.chunks-cache.backend=memcached
+            - -blocks-storage.bucket-store.chunks-cache.memcached.addresses=dns+{{ .Release.Name }}-memcached.{{ .Release.Namespace }}.svc.cluster.local:11211
+            {{- end }}
+            {{- if index .Values "memcached-index-read" "enabled" }}
+            - -blocks-storage.bucket-store.index-cache.backend=memcached
+            - -blocks-storage.bucket-store.index-cache.memcached.addresses=dns+{{ .Release.Name }}-memcached-index-read.{{ .Release.Namespace }}.svc.cluster.local:11211
+            {{- end }}
+            {{- if index .Values "memcached-metadata" "enabled" }}
+            - -blocks-storage.bucket-store.metadata-cache.backend=memcached
+            - -blocks-storage.bucket-store.metadata-cache.memcached.addresses=dns+{{ .Release.Name }}-memcached-metadata.{{ .Release.Namespace }}.svc.cluster.local:11211
             {{- end }}
             {{- range $key, $value := .Values.store_gateway.extraArgs }}
             - "-{{ $key }}={{ $value }}"
@@ -147,4 +167,5 @@ spec:
             {{- if .Values.store_gateway.env }}
               {{- toYaml .Values.store_gateway.env | nindent 12 }}
             {{- end }}
+{{- end -}}
 {{- end -}}

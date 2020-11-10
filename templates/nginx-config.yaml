@@ -1,3 +1,4 @@
+{{- if not .Values.bootstrap -}}
 {{- if .Values.nginx.enabled }}
 kind: ConfigMap
 apiVersion: v1
@@ -43,8 +44,8 @@ data:
         }
 
         # Admin API Config
-        location ~ /admin/.*
-          proxy_pass      http://{{ template "cortex.fullname" . }}-admin-api.{{ .Release.Namespace }}.svc.cluster.local:{{ .Values.config.server.http_listen_port }}$request_uri;
+        location ~ /admin/.* {
+          proxy_pass      http://{{ template "metrics_enterprise.fullname" . }}-admin-api.{{ .Release.Namespace }}.svc.cluster.local:{{ .Values.config.server.http_listen_port }}$request_uri;
         }
 
         # Distributor Config
@@ -94,3 +95,4 @@ data:
       }
     }
 {{- end }}
+{{- end -}}

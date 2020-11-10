@@ -1,3 +1,4 @@
+{{- if not .Values.bootstrap -}}
 {{- if and .Values.ingress.enabled .Values.nginx.enabled -}}
 {{- $fullName := include "metrics_enterprise.fullname" . -}}
 {{- $svcPort := .Values.nginx.http_listen_port -}}
@@ -42,3 +43,4 @@ spec:
         {{- end }}
   {{- end }}
 {{- end }}
+{{- end -}}

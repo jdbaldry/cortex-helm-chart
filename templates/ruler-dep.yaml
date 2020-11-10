@@ -1,3 +1,4 @@
+{{- if not .Values.bootstrap -}}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -58,7 +59,23 @@ spec:
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           args:
             - "-target=ruler"
-            - "-config.file=/etc/metrics-enterprise/cortex.yaml"
+            - "-config.file=/etc/metrics-enterprise/metrics-enterprise.yaml"
+            {{- if .Values.consul.enabled }}
+            - -consul.hostname={{ .Release.Name }}-consul-server.{{ .Release.Namespace }}.svc.cluster.local:8500
+            {{- end }}
+            {{- if .Values.minio.enabled }}
+            - -admin.client.backend-type=s3
+            - -admin.client.s3.endpoint={{ .Release.Name }}-minio.{{ .Release.Namespace }}.svc.cluster.local:9000
+            - -admin.client.s3.bucket-name=metrics-enterprise-tsdb
+            - -admin.client.s3.access-key-id=metrics-enterprise
+            - -admin.client.s3.secret-access-key=supersecret
+            - -admin.client.s3.insecure=true
+            - -blocks-storage.s3.endpoint={{ .Release.Name }}-minio.{{ .Release.Namespace }}.svc.cluster.local:9000
+            - -blocks-storage.s3.bucket-name=metrics-enterprise-tsdb
+            - -blocks-storage.s3.access-key-id=metrics-enterprise
+            - -blocks-storage.s3.secret-access-key=supersecret
+            - -blocks-storage.s3.insecure=true
+            {{- end }}
             - "-ruler.configs.url=http://{{ template "metrics_enterprise.fullname" . }}-configs.{{ .Release.Namespace }}.svc.cluster.local:{{ .Values.config.server.http_listen_port }}"
             {{- if .Values.config.ruler.enable_alertmanager_discovery }}
             - "-ruler.alertmanager-discovery=true"
@@ -66,9 +83,12 @@ spec:
             {{- else }}
             - "-ruler.alertmanager-url=http://{{ template "metrics_enterprise.fullname" . }}-alertmanager.{{ .Release.Namespace }}.svc.cluster.local:{{ .Values.config.server.http_listen_port }}/api/prom/alertmanager/"
             {{- end }}
-            {{- if .Values.memcached.enabled }}
+            {{- if and (.Values.memcached.enabled) (eq .Values.config.storage.engine "chunks") }}
             - -store.chunks-cache.memcached.addresses=dns+{{ template "metrics_enterprise.fullname" . }}-memcached.{{ .Release.Namespace }}.svc.cluster.local:11211
             - -store.chunks-cache.memcached.timeout=100ms
+            {{- end }}
+            {{- if eq .Values.config.storage.engine "blocks" }}
+            - -querier.store-gateway-addresses=dns+{{ template "metrics_enterprise.fullname" . }}-store-gateway.{{ .Release.Namespace }}.svc.cluster.local:{{ .Values.config.server.http_listen_port }}
             {{- end }}
           {{- range $key, $value := .Values.ruler.extraArgs }}
             - "-{{ $key }}={{ $value }}"
@@ -121,3 +141,4 @@ spec:
 {{- end }}
         - name: storage
           emptyDir: {}
+{{- end -}}

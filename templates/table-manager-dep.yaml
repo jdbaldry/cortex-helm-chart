@@ -1,3 +1,4 @@
+{{- if not .Values.bootstrap -}}
 {{- if ne .Values.config.storage.engine "blocks" -}}
 apiVersion: apps/v1
 kind: Deployment
@@ -59,7 +60,7 @@ spec:
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           args:
             - "-target=table-manager"
-            - "-config.file=/etc/metrics-enterprise/cortex.yaml"
+            - "-config.file=/etc/metrics-enterprise/metrics-enterprise.yaml"
           {{- range $key, $value := .Values.table_manager.extraArgs }}
             - "-{{ $key }}={{ $value }}"
           {{- end }}
@@ -111,4 +112,5 @@ spec:
 {{- end }}
         - name: storage
           emptyDir: {}
+{{- end -}}
 {{- end -}}

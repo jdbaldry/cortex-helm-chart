@@ -1,3 +1,4 @@
+{{- if not .Values.bootstrap -}}
 {{- if not .Values.alertmanager.statefulSet.enabled -}}
 apiVersion: apps/v1
 kind: Deployment
@@ -59,8 +60,16 @@ spec:
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           args:
             - "-target=alertmanager"
-            - "-config.file=/etc/metrics-enterprise/cortex.yaml"
+            - "-config.file=/etc/metrics-enterprise/metrics-enterprise.yaml"
             - "-alertmanager.configs.url=http://{{ template "metrics_enterprise.fullname" . }}-configs.{{ .Release.Namespace }}.svc.cluster.local:{{ .Values.config.server.http_listen_port }}"
+            {{- if .Values.minio.enabled }}
+            - -admin.client.backend-type=s3
+            - -admin.client.s3.endpoint={{ .Release.Name }}-minio.{{ .Release.Namespace }}.svc.cluster.local:9000
+            - -admin.client.s3.bucket-name=metrics-enterprise-tsdb
+            - -admin.client.s3.access-key-id=metrics-enterprise
+            - -admin.client.s3.secret-access-key=supersecret
+            - -admin.client.s3.insecure=true
+            {{- end }}
           {{- range $key, $value := .Values.alertmanager.extraArgs }}
             - "-{{ $key }}={{ $value }}"
           {{- end }}
@@ -112,4 +121,5 @@ spec:
 {{- end }}
         - name: storage
           emptyDir: {}
+{{- end -}}
 {{- end -}}
