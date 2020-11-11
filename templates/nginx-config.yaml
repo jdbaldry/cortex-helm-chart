@@ -43,13 +43,18 @@ data:
           return 200 'alive';
         }
 
-        # Admin API Config
+        # Admin API endpoints
         location ~ /admin/.* {
           proxy_pass      http://{{ template "metrics_enterprise.fullname" . }}-admin-api.{{ .Release.Namespace }}.svc.cluster.local:{{ .Values.config.server.http_listen_port }}$request_uri;
         }
 
+        # Use the admin-api service for config requests
+        location = /config {
+          proxy_pass      http://{{ template "metrics_enterprise.fullname" . }}-admin-api.{{ .Release.Namespace }}.svc.cluster.local:{{ .Values.config.server.http_listen_port }}$request_uri;
+        }
+
         # Distributor Config
-        location = /ring {
+        location ~ /(ring|ingester/ring) {
           proxy_pass      http://{{ template "metrics_enterprise.fullname" . }}-distributor.{{ .Release.Namespace }}.svc.cluster.local:{{ .Values.config.server.http_listen_port }}$request_uri;
         }
 
