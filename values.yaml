@@ -1287,9 +1287,15 @@ minio:
   enabled: true
   accessKey: metrics-enterprise
   secretKey: supersecret
+  persistence:
+    size: 25Gi
   buckets:
     - name: metrics-enterprise-tsdb
+      policy: none
+      purge: false
     - name: metrics-enterprise-admin
+      policy: none
+      purge: false
 
 consul:
   enabled: true
