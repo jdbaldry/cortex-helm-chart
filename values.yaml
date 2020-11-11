@@ -1218,6 +1218,27 @@ memcached:
   #             values:
   #             - metrics-enterprise-memcached
 
+# Chunks index-write cache.
+memcached-index-write:
+  enabled: false
+  replicaCount: 2
+  #pdbMinAvailable: 1
+  #image: memcached:1.5.7-alpine
+  memcached:
+    maxItemMemory: 3840
+    extraArgs:
+      - -I 32m
+    threads: 32
+  resources:
+    requests:
+      memory: 1Gi
+      cpu: 10m
+    limits:
+      memory: 4Gi
+      cpu: 1
+  metrics:
+    enabled: true
+
 # Blocks/chunks index read cache.
 memcached-index-read:
   enabled: true
