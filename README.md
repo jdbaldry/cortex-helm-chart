@@ -653,3 +653,14 @@ $ helm upgrade <cluster name>  metrics-enterprise -f <values.yaml file>
 | table\_manager.terminationGracePeriodSeconds | int | `180` |  |
 | table\_manager.tolerations | list | `[]` |  |
 | useExternalConfig | bool | `false` |  |
+
+# Development
+
+For local development on single node clusters, the `local.yaml` values file can be used to deploy single replicas of the memcached and consul clusters.
+
+To configure a local default storage class for k3d:
+
+```console
+$ kubectl apply -f https://raw.githubusercontent.com/rancher/local-path-provisioner/master/deploy/local-path-storage.yaml
+$ kubectl patch storageclass local-path -p '{"metadata": {"annotations":{"storageclass.kubernetes.io/is-default-class":"true"}}}'
+```
