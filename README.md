@@ -74,6 +74,8 @@ $ helm upgrade <cluster name>  metrics-enterprise/metrics-enterprise -f <values.
 | https://kubernetes-charts.storage.googleapis.com/ | memcached | 3.2.3 |
 | https://kubernetes-charts.storage.googleapis.com/ | memcached | 3.2.3 |
 | https://kubernetes-charts.storage.googleapis.com/ | memcached | 3.2.3 |
+| https://helm.min.io/ | minio | 8.0.0 |
+| https://helm.releases.hashicorp.com | consul | 0.25.0 |
 
 ## Chart Values
 
