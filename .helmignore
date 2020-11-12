@@ -1,2 +1,8 @@
 .git
-metrics-enterprise
+.envrc
+nix
+shell.nix
+vendor
+lib
+environments
+releases
