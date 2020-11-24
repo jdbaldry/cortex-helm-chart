@@ -73,7 +73,7 @@ spec:
             {{- if .Values.minio.enabled }}
             - -admin.client.backend-type=s3
             - -admin.client.s3.endpoint={{ .Release.Name }}-minio.{{ .Release.Namespace }}.svc.cluster.local:9000
-            - -admin.client.s3.bucket-name=metrics-enterprise-tsdb
+            - -admin.client.s3.bucket-name=metrics-enterprise-admin
             - -admin.client.s3.access-key-id=metrics-enterprise
             - -admin.client.s3.secret-access-key=supersecret
             - -admin.client.s3.insecure=true
@@ -88,7 +88,7 @@ spec:
             - -blocks-storage.bucket-store.metadata-cache.memcached.addresses=dns+{{ .Release.Name }}-memcached-metadata.{{ .Release.Namespace }}.svc.cluster.local:11211
             {{- end }}
             {{- if eq .Values.config.storage.engine "blocks" }}
-            - -querier.store-gateway-addresses=dns+{{ template "metrics_enterprise.fullname" . }}-store-gateway.{{ .Release.Namespace }}.svc.cluster.local:{{ .Values.config.server.http_listen_port }}
+            - -querier.store-gateway-addresses=dns+{{ template "metrics_enterprise.fullname" . }}-store-gateway-headless.{{ .Release.Namespace }}.svc.cluster.local:{{ .Values.config.server.http_listen_port }}
             {{- end }}
           {{- range $key, $value := .Values.querier.extraArgs }}
             - "-{{ $key }}={{ $value }}"

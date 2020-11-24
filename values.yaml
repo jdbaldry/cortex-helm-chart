@@ -117,8 +117,12 @@ config:
           timeout: 1s
   ruler:
     enable_alertmanager_discovery: false
+    enable_api: true
+    rule_path: '/data'
   alertmanager:
-    external_url: '/api/prom/alertmanager'
+    data_dir: '/data'
+    enable_api: true
+    external_url: '/alertmanager'
   frontend:
     #max_outstanding_per_tenant: 1000
     log_queries_longer_than: 10s
@@ -826,6 +830,7 @@ table_manager:
   env: []
 
 configs:
+  enabled: false
   replicas: 1
 
   service:
@@ -934,12 +939,12 @@ nginx:
   livenessProbe:
     httpGet:
       path: /healthz
-      port: http-metrics
+      port: http
     initialDelaySeconds: 10
   readinessProbe:
     httpGet:
       path: /healthz
-      port: http-metrics
+      port: http
     initialDelaySeconds: 10
 
   securityContext: {}
@@ -1317,6 +1322,9 @@ minio:
       policy: none
       purge: false
     - name: metrics-enterprise-admin
+      policy: none
+      purge: false
+    - name: metrics-enterprise-ruler
       policy: none
       purge: false
 

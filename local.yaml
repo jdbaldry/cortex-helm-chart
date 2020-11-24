@@ -7,6 +7,9 @@ consul:
 minio:
   persistence:
     size: 5Gi
+  resources:
+    requests:
+      memory: 1Gi
 
 memcached:
   replicaCount: 1
@@ -16,3 +19,6 @@ memcached-index-read:
 
 memcached-metadata:
   replicaCount: 1
+
+ingester:
+  replicas: 1

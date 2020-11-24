@@ -1,4 +1,5 @@
 {{- if not .Values.bootstrap -}}
+{{- if .Values.configs.enabled -}}
 apiVersion: v1
 kind: Service
 metadata:
@@ -24,4 +25,5 @@ spec:
   selector:
     app: {{ template "metrics_enterprise.name" . }}-configs
     release: {{ .Release.Name }}
+{{- end -}}
 {{- end -}}

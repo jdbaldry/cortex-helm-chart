@@ -66,7 +66,7 @@ spec:
             {{- if .Values.minio.enabled }}
             - -admin.client.backend-type=s3
             - -admin.client.s3.endpoint={{ .Release.Name }}-minio.{{ .Release.Namespace }}.svc.cluster.local:9000
-            - -admin.client.s3.bucket-name=metrics-enterprise-tsdb
+            - -admin.client.s3.bucket-name=metrics-enterprise-admin
             - -admin.client.s3.access-key-id=metrics-enterprise
             - -admin.client.s3.secret-access-key=supersecret
             - -admin.client.s3.insecure=true
@@ -75,8 +75,14 @@ spec:
             - -blocks-storage.s3.access-key-id=metrics-enterprise
             - -blocks-storage.s3.secret-access-key=supersecret
             - -blocks-storage.s3.insecure=true
-            {{- end }}
-            - "-ruler.configs.url=http://{{ template "metrics_enterprise.fullname" . }}-configs.{{ .Release.Namespace }}.svc.cluster.local:{{ .Values.config.server.http_listen_port }}"
+            - -ruler.storage.type=s3
+            - -ruler.storage.s3.endpoint={{ .Release.Name }}-minio.{{ .Release.Namespace }}.svc.cluster.local:9000
+            - -ruler.storage.s3.buckets=metrics-enterprise-ruler
+            - -ruler.storage.s3.access-key-id=metrics-enterprise
+            - -ruler.storage.s3.secret-access-key=supersecret
+            - -ruler.storage.s3.insecure=true
+            - -ruler.storage.s3.force-path-style=true
+           {{- end }}
             {{- if .Values.config.ruler.enable_alertmanager_discovery }}
             - "-ruler.alertmanager-discovery=true"
             - "-ruler.alertmanager-url=http://_http-metrics._tcp.{{ template "metrics_enterprise.name" . }}-alertmanager-headless/api/prom/alertmanager/"
@@ -88,7 +94,7 @@ spec:
             - -store.chunks-cache.memcached.timeout=100ms
             {{- end }}
             {{- if eq .Values.config.storage.engine "blocks" }}
-            - -querier.store-gateway-addresses=dns+{{ template "metrics_enterprise.fullname" . }}-store-gateway.{{ .Release.Namespace }}.svc.cluster.local:{{ .Values.config.server.http_listen_port }}
+            - -querier.store-gateway-addresses=dns+{{ template "metrics_enterprise.fullname" . }}-store-gateway-headless.{{ .Release.Namespace }}.svc.cluster.local:{{ .Values.config.server.http_listen_port }}
             {{- end }}
           {{- range $key, $value := .Values.ruler.extraArgs }}
             - "-{{ $key }}={{ $value }}"
