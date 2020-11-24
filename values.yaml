@@ -117,7 +117,11 @@ config:
           timeout: 1s
   ruler:
     enable_alertmanager_discovery: false
+    enable_api: true
+    rule_path: '/data'
   alertmanager:
+    data_dir: '/data'
+    enable_api: true
     external_url: '/api/prom/alertmanager'
   frontend:
     #max_outstanding_per_tenant: 1000
@@ -826,6 +830,7 @@ table_manager:
   env: []
 
 configs:
+  enabled: false
   replicas: 1
 
   service:
@@ -1317,6 +1322,9 @@ minio:
       policy: none
       purge: false
     - name: metrics-enterprise-admin
+      policy: none
+      purge: false
+    - name: metrics-enterprise-ruler
       policy: none
       purge: false
 

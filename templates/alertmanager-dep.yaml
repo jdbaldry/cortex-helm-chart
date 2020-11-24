@@ -61,15 +61,21 @@ spec:
           args:
             - "-target=alertmanager"
             - "-config.file=/etc/metrics-enterprise/metrics-enterprise.yaml"
-            - "-alertmanager.configs.url=http://{{ template "metrics_enterprise.fullname" . }}-configs.{{ .Release.Namespace }}.svc.cluster.local:{{ .Values.config.server.http_listen_port }}"
-            {{- if .Values.minio.enabled }}
+          {{- if .Values.minio.enabled }}
             - -admin.client.backend-type=s3
             - -admin.client.s3.endpoint={{ .Release.Name }}-minio.{{ .Release.Namespace }}.svc.cluster.local:9000
             - -admin.client.s3.bucket-name=metrics-enterprise-admin
             - -admin.client.s3.access-key-id=metrics-enterprise
             - -admin.client.s3.secret-access-key=supersecret
             - -admin.client.s3.insecure=true
-            {{- end }}
+            - -alertmanager.storage.type=s3
+            - -alertmanager.storage.s3.endpoint={{ .Release.Name }}-minio.{{ .Release.Namespace }}.svc.cluster.local:9000
+            - -alertmanager.storage.s3.buckets=metrics-enterprise-ruler
+            - -alertmanager.storage.s3.access-key-id=metrics-enterprise
+            - -alertmanager.storage.s3.secret-access-key=supersecret
+            - -alertmanager.storage.s3.insecure=true
+            - -alertmanager.storage.s3.force-path-style=true
+          {{- end }}
           {{- range $key, $value := .Values.alertmanager.extraArgs }}
             - "-{{ $key }}={{ $value }}"
           {{- end }}
