@@ -122,7 +122,7 @@ config:
   alertmanager:
     data_dir: '/data'
     enable_api: true
-    external_url: '/api/prom/alertmanager'
+    external_url: '/alertmanager'
   frontend:
     #max_outstanding_per_tenant: 1000
     log_queries_longer_than: 10s
