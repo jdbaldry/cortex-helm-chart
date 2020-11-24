@@ -939,12 +939,12 @@ nginx:
   livenessProbe:
     httpGet:
       path: /healthz
-      port: http-metrics
+      port: http
     initialDelaySeconds: 10
   readinessProbe:
     httpGet:
       path: /healthz
-      port: http-metrics
+      port: http
     initialDelaySeconds: 10
 
   securityContext: {}
