@@ -62,6 +62,9 @@ spec:
             - "-config.file=/etc/metrics-enterprise/metrics-enterprise.yaml"
             {{- if .Values.consul.enabled }}
             - -consul.hostname={{ .Release.Name }}-consul-server.{{ .Release.Namespace }}.svc.cluster.local:8500
+            - -ruler.ring.store=consul
+            - -ruler.ring.consul.hostname={{ .Release.Name }}-consul-server.{{ .Release.Namespace }}.svc.cluster.local:8500
+            - -ruler.enable-sharding=true
             {{- end }}
             {{- if .Values.minio.enabled }}
             - -admin.client.backend-type=s3
