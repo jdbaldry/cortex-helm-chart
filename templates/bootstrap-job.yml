@@ -45,6 +45,10 @@ spec:
             mountPath: /etc/metrics-enterprise
           - name: license
             mountPath: /license
+        env:
+         {{- if .Values.bootstrapJob.env }}
+           {{- toYaml .Values.bootstrapJob.env | nindent 10 }}
+         {{- end }}
       restartPolicy: OnFailure
       imagePullSecrets:
       {{- range .Values.image.pullSecrets }}
