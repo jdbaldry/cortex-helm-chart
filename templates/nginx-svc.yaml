@@ -20,8 +20,8 @@ spec:
   ports:
     - port: {{ .Values.nginx.http_listen_port }}
       protocol: TCP
-      name: http-metrics
-      targetPort: http-metrics
+      name: http
+      targetPort: http
   selector:
     app: {{ template "metrics_enterprise.name" . }}-nginx
     release: {{ .Release.Name }}
