@@ -97,11 +97,6 @@ data:
         location ~ /ruler/ring {
           proxy_pass      http://{{ template "metrics_enterprise.fullname" . }}-ruler.{{ .Release.Namespace }}.svc.cluster.local:{{ .Values.config.server.http_listen_port }}$request_uri;
         }
-
-        # Config Config
-        location ~ /api/prom/configs/.* {
-          proxy_pass      http://{{ template "metrics_enterprise.fullname" . }}-configs.{{ .Release.Namespace }}.svc.cluster.local:{{ .Values.config.server.http_listen_port }}$request_uri;
-        }
       }
     }
 {{- end }}
