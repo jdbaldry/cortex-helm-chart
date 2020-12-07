@@ -24,6 +24,7 @@ spec:
         target: bootstrap
         release: {{ .Release.Name }}
     spec:
+      serviceAccountName: {{ template "metrics_enterprise.serviceAccountName" . }}
       containers:
       - args:
           - "-target=bootstrap"
