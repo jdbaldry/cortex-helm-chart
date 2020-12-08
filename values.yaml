@@ -5,6 +5,7 @@ bootstrap: false
 bootstrapJob:
   extraArgs: []
   env: []
+  annotations: {}
 
 ## Container image settings.
 ## Since the image is unique for all microservices, so are image settings.
