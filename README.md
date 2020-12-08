@@ -153,6 +153,8 @@ $ helm upgrade <cluster name>  metrics-enterprise/metrics-enterprise -f <values.
 | alertmanager.terminationGracePeriodSeconds | int | `60` |  |
 | alertmanager.tolerations | list | `[]` |  |
 | bootstrap | bool | `false` | Perform bootstrapping process instead of deploying cluster |
+| bootstrapJob.annotations | object | `{}` |  |
+| bootstrapJob.env | list | `[]` |  |
 | bootstrapJob.extraArgs | object | {} |  |
 | compactor.affinity.podAntiAffinity.preferredDuringSchedulingIgnoredDuringExecution[0].podAffinityTerm.labelSelector.matchExpressions[0].key | string | `"target"` |  |
 | compactor.affinity.podAntiAffinity.preferredDuringSchedulingIgnoredDuringExecution[0].podAffinityTerm.labelSelector.matchExpressions[0].operator | string | `"In"` |  |
