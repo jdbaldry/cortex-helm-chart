@@ -3,7 +3,7 @@ entries:
   consul:
   - apiVersion: v1
     appVersion: 1.8.4
-    created: "2020-12-01T10:49:42.328755364Z"
+    created: "2021-01-04T17:22:44.019210337Z"
     description: Official HashiCorp Consul Chart
     digest: 00ddd42c4621d04c1c9a398e0329926ffc8fb99bf36460b17f550ea2f97e1de9
     home: https://www.consul.io
@@ -19,7 +19,7 @@ entries:
   memcached:
   - apiVersion: v1
     appVersion: 1.5.20
-    created: "2020-12-01T10:49:42.329231673Z"
+    created: "2021-01-04T17:22:44.01972555Z"
     description: Free & open source, high-performance, distributed memory object caching
       system.
     digest: 3912a2281b0b4f9587c9cd800090830c3b5094408d63a1f0b577286e4fc23c1a
@@ -44,7 +44,52 @@ entries:
   metrics-enterprise:
   - apiVersion: v2
     appVersion: v1.0.2
-    created: "2020-12-01T10:49:42.324227837Z"
+    created: "2021-01-04T17:22:44.014093704Z"
+    dependencies:
+    - alias: memcached
+      condition: memcached.enabled
+      name: memcached
+      repository: https://charts.helm.sh/stable
+      version: 3.2.3
+    - alias: memcached-index-read
+      condition: memcached-index-read.enabled
+      name: memcached
+      repository: https://charts.helm.sh/stable
+      version: 3.2.3
+    - alias: memcached-index-write
+      condition: memcached-index-write.enabled
+      name: memcached
+      repository: https://charts.helm.sh/stable
+      version: 3.2.3
+    - alias: memcached-metadata
+      condition: memcached-metadata.enabled
+      name: memcached
+      repository: https://charts.helm.sh/stable
+      version: 3.2.3
+    - alias: minio
+      condition: minio.enabled
+      name: minio
+      repository: https://helm.min.io/
+      version: 8.0.0
+    - alias: consul
+      condition: consul.enabled
+      name: consul
+      repository: https://helm.releases.hashicorp.com
+      version: 0.25.0
+    description: Grafana Metrics Enterprise
+    digest: 90497bd8811339ce63919e2e62261cb27ad9ca13d428b905649ad6b14d15b768
+    home: https://grafana.com/products/metrics-enterprise/
+    icon: https://grafana.com/static/img/menu/metrics-enterprise.svg
+    kubeVersion: ^1.10.0-0
+    name: metrics-enterprise
+    sources:
+    - https://github.com/grafana/metrics-enterprise-helm-chart
+    urls:
+    - https://grafana.github.io/metrics-enterprise-helm-chart/metrics-enterprise-0.2.4.tgz
+    version: 0.2.4
+  - apiVersion: v2
+    appVersion: v1.0.2
+    created: "2021-01-04T17:22:44.072075292Z"
     dependencies:
     - alias: memcached
       condition: memcached.enabled
@@ -85,56 +130,11 @@ entries:
     sources:
     - https://github.com/grafana/metrics-enterprise-helm-chart
     urls:
-    - https://grafana.github.io/metrics-enterprise-helm-chart/metrics-enterprise-0.2.3.tgz
-    version: 0.2.3
-  - apiVersion: v2
-    appVersion: v1.0.2
-    created: "2020-12-01T10:49:42.382241507Z"
-    dependencies:
-    - alias: memcached
-      condition: memcached.enabled
-      name: memcached
-      repository: https://kubernetes-charts.storage.googleapis.com/
-      version: 3.2.3
-    - alias: memcached-index-read
-      condition: memcached-index-read.enabled
-      name: memcached
-      repository: https://kubernetes-charts.storage.googleapis.com/
-      version: 3.2.3
-    - alias: memcached-index-write
-      condition: memcached-index-write.enabled
-      name: memcached
-      repository: https://kubernetes-charts.storage.googleapis.com/
-      version: 3.2.3
-    - alias: memcached-metadata
-      condition: memcached-metadata.enabled
-      name: memcached
-      repository: https://kubernetes-charts.storage.googleapis.com/
-      version: 3.2.3
-    - alias: minio
-      condition: minio.enabled
-      name: minio
-      repository: https://helm.min.io/
-      version: 8.0.0
-    - alias: consul
-      condition: consul.enabled
-      name: consul
-      repository: https://helm.releases.hashicorp.com
-      version: 0.25.0
-    description: Grafana Metrics Enterprise
-    digest: cb4fe3249e161ec6d5226688f9ed71745afadc9ef255ffccde53bacca0e6565c
-    home: https://grafana.com/products/metrics-enterprise/
-    icon: https://grafana.com/static/img/menu/metrics-enterprise.svg
-    kubeVersion: ^1.10.0-0
-    name: metrics-enterprise
-    sources:
-    - https://github.com/grafana/metrics-enterprise-helm-chart
-    urls:
     - https://grafana.github.io/metrics-enterprise-helm-chart/docs/metrics-enterprise-0.2.3.tgz
     version: 0.2.3
   - apiVersion: v2
     appVersion: v1.0.2
-    created: "2020-12-01T10:49:42.373325076Z"
+    created: "2021-01-04T17:22:44.062645371Z"
     dependencies:
     - alias: memcached
       condition: memcached.enabled
@@ -179,7 +179,7 @@ entries:
     version: 0.2.2
   - apiVersion: v2
     appVersion: v1.0.2
-    created: "2020-12-01T10:49:42.364206232Z"
+    created: "2021-01-04T17:22:44.054557745Z"
     dependencies:
     - alias: memcached
       condition: memcached.enabled
@@ -224,7 +224,7 @@ entries:
     version: 0.2.1
   - apiVersion: v2
     appVersion: v1.0.2
-    created: "2020-12-01T10:49:42.352223416Z"
+    created: "2021-01-04T17:22:44.041302017Z"
     dependencies:
     - alias: memcached
       condition: memcached.enabled
@@ -269,7 +269,7 @@ entries:
     version: 0.2.0
   - apiVersion: v2
     appVersion: v1.0.2
-    created: "2020-12-01T10:49:42.340602555Z"
+    created: "2021-01-04T17:22:44.030847605Z"
     dependencies:
     - alias: memcached
       condition: memcached.enabled
@@ -315,7 +315,7 @@ entries:
   minio:
   - apiVersion: v1
     appVersion: master
-    created: "2020-12-01T10:49:42.330316985Z"
+    created: "2021-01-04T17:22:44.020754168Z"
     description: High Performance, Kubernetes Native Object Storage
     digest: 27223458c38b25f55d9c47f6bdf66959a16289db062310a211a25617328251ea
     home: https://min.io
@@ -333,4 +333,4 @@ entries:
     urls:
     - https://grafana.github.io/metrics-enterprise-helm-chart/charts/minio-8.0.0.tgz
     version: 8.0.0
-generated: "2020-12-01T10:49:42.314123017Z"
+generated: "2021-01-04T17:22:44.004699952Z"
