@@ -97,7 +97,7 @@ spec:
             - -store.chunks-cache.memcached.timeout=100ms
             {{- end }}
             {{- if eq .Values.config.storage.engine "blocks" }}
-            - -querier.store-gateway-addresses=dns+{{ template "metrics_enterprise.fullname" . }}-store-gateway-headless.{{ .Release.Namespace }}.svc.cluster.local:{{ .Values.config.server.http_listen_port }}
+            - -querier.store-gateway-addresses=dns+{{ template "metrics_enterprise.fullname" . }}-store-gateway-headless.{{ .Release.Namespace }}.svc.cluster.local:{{ .Values.config.server.grpc_listen_port }}
             {{- end }}
           {{- range $key, $value := .Values.ruler.extraArgs }}
             - "-{{ $key }}={{ $value }}"
